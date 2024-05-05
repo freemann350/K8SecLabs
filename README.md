@@ -6,19 +6,20 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
     
 ## Architecture
 
-![imagem](https://github.com/freemann350/K8SecLabs/assets/25934321/3cf72a22-bca6-4a76-82dd-2e328e56ea77)
+![Overall architecture](https://github.com/freemann350/K8SecLabs/assets/25934321/3cf72a22-bca6-4a76-82dd-2e328e56ea77)
+![Database](https://github.com/freemann350/K8SecLabs/assets/25934321/ede5e520-8f8d-4947-8538-8d245904b8c6)
 
-## ToDo
-
-**Notes**
+## Notes
 
 - Admins can do everything
 - Professors can create definitions and environments
 - Trainees can only join and access environments
 
+## ToDo
+
 - Revise DB tables and fields
 - Revise Environment Access methods
-
+---
 - Database
   - [x] Migrations
   - [x] Seeders
