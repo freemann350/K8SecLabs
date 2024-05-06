@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('access_code',20);
             $table->integer('qty');
             $table->timestamp('end_date')->nullable();
-            $table->string('description',255)->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
