@@ -26,17 +26,18 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
 
 - Frontend
   - Common
-    - [ ] Login
+    - [x] Login
     - [ ] Reset password (?)
     - Edit own information
-      - [ ] Common information
-      - [ ] Password
+      - [x] Common information
+      - [x] Password
   - Admins
     - Users
-      - [ ] Create
-      - [ ] Read
-      - [ ] Update (except password)
-      - [ ] Delete
+      - [x] Create
+      - [x] Read
+      - [x] Update (except password)
+      - [x] Delete
+      - [ ] Disallow admin to delete himself
     - Environments
       - [ ] Read
       - [ ] Delete
@@ -68,12 +69,12 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
         - [ ] Read
 
 - Backend
-  - [ ] Select kubernetes distribution
+  - [x] Select kubernetes distribution
+    - k3s
   - [ ] Connection to the cluster
-  - [ ] API Authentication
+  - [x] API Authentication
   - Deploying environments
     - [ ] Create Namespace
     - [ ] Create Pods
   - Deleting environments
     - [ ] Delete Namespace (assuming it will also delete all pods)
-

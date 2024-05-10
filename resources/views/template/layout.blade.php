@@ -4,7 +4,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>MikroKontroller</title>
+  <title>K8SecLabs</title>
   <!-- plugins:css -->
   <link href="https://cdn.datatables.net/v/bs5/dt-2.0.3/datatables.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url('vendors/feather/feather.css') }}">
@@ -33,10 +33,10 @@
         </div>
         <div>
           <a class="navbar-brand brand-logo" href="{{ route ('Dashboard') }}">
-            <img src="{{url('img/mikrotik.png')}}" alt="logo"/>
+            <img src="{{url('img/ksl.png')}}" alt="logo"/>
           </a>
           <a class="navbar-brand brand-logo-mini" href="{{ route ('Dashboard') }}">
-            <img src="https://merch.mikrotik.com/cdn/shop/files/512.png?v=1657867177" alt="logo"/>
+            <img src="{{url('img/favicon.png')}}" alt="logo"/>
           </a>
         </div>
       </div>
@@ -63,11 +63,54 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item nav-category">My pages</li>
-          <li class="nav-item {{ Route::currentRouteName() == 'Dashboard' ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route ('Dashboard') }}">
-              <i class="menu-icon mdi mdi-grid"></i>
-              <span class="menu-title">Dashboard</span>
-            </a>
+            <li class="nav-item {{ Route::currentRouteName() == 'Dashboard' ? 'active' : '' }}">
+              <a class="nav-link" href="{{ route ('Dashboard') }}">
+                <i class="menu-icon mdi mdi-grid"></i>
+                <span class="menu-title">Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{ (Route::currentRouteName() == 'User.editMe' && Auth::user()->id == request()->route('User')) ? 'active' : '' }}" href="{{route('User.editMe')}}">
+                <i class="menu-icon mdi mdi-account-box"></i>
+                <span class="menu-title">My information</span>
+              </a>
+            </li>
+            @if (Auth::user()->role == "A")
+            <li class="nav-item">
+              <a class="nav-link {{ Route::currentRouteName() == 'Users.index' ? 'active' : '' }}" href="{{route('Users.index')}}">
+                <i class="menu-icon mdi mdi-account-supervisor"></i>
+                <span class="menu-title">Users</span>
+              </a>
+            </li>
+            @endif
+          </li>
+          <li class="nav-item nav-category">Definitions</li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="menu-icon mdi mdi-file-cabinet"></i>
+                <span class="menu-title">My Definitions</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="menu-icon mdi mdi-store"></i>
+                <span class="menu-title">Definition Catalog</span>
+              </a>
+            </li>
+          </li>
+          <li class="nav-item nav-category">Environments</li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="menu-icon mdi mdi-clipboard-flow"></i>
+                <span class="menu-title">Past environments</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="menu-icon mdi mdi-view-grid-plus"></i>
+                <span class="menu-title">New environment</span>
+              </a>
+            </li>
           </li>
           <li class="nav-item nav-category"></li>
           <li class="nav-item">
@@ -75,7 +118,6 @@
               <i class="menu-icon mdi  mdi-logout"></i>
               <span class="menu-title">Logout</span>
             </a>
-          </li>
           </li>
         </ul>
       </nav>
@@ -94,7 +136,7 @@
         <!-- FOOTER -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">MikroKontrol - Simplified MikroTik SDN controller</span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">K8SecLabs - Kubernetes based Cyber Range Control Panel</span>
             <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Copyright © 2024. All rights reserved. IPL@EI</span>
           </div>
         </footer>
@@ -117,9 +159,6 @@
   <script src="{{ url('js/main/sweetalert2@11.js') }}"></script>
   <script>
     let table = new DataTable('#dt');
-    @if (Route::currentRouteName() == 'Interfaces.index')
-    let table_2 = new DataTable('#dt_wifi');
-    @endif
   </script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {

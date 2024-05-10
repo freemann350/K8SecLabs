@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>MikroKontrol - Login</title>
+  <title>K8SecLabs - Login</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
   <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap'>
   <link rel="stylesheet" href="{{ url('css/login/style.css') }}">
@@ -42,9 +42,9 @@
   <form method="POST" action="{{ route('Auth.login') }}">
   <div class="screen-1">
     <div>
-      <strong><i><p>MikroKontrol</p></i></strong>
+      <strong><i><p>K8SecLabs</p></i></strong>
     </div>
-    <img src="https://merch.mikrotik.com/cdn/shop/files/512.png?v=1657867177" alt="MikroTik Logo">
+    <img src="{{url ("img/favicon.png")}}" alt="MikroTik Logo">
       @csrf
       <div class="email">
         <label for="email">Email Address</label>

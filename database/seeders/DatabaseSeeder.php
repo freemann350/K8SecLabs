@@ -25,10 +25,10 @@ class DatabaseSeeder extends Seeder
         echo ("User 'Admin User' added\n");
 
         DB::table('users')->insert([
-            'name' => 'Professor User',
-            'email' => 'professor@example.com',
+            'name' => 'Lecturer User',
+            'email' => 'lecturer@example.com',
             'password' => Hash::make('password'),
-            'role' => 'P',
+            'role' => 'L',
         ]);
         echo ("User 'Professor User' added\n");
 

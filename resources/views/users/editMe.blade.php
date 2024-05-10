@@ -9,7 +9,7 @@
             <p class="card-description">
                 Here you can add edit a user
             </p>
-            <form method="POST" action="{{route('Users.update',$user['user_id'])}}" enctype="multipart/form-data">
+            <form method="POST" action="{{route('User.updateMe',$user['user_id'])}}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-group">
@@ -34,19 +34,45 @@
                     @enderror
                 </div>
             </div>
+            <button type="submit" class="btn btn-primary btn-fw">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Edit password</h4>
+            <form method="POST" action="{{route('User.updatePassword',$user['user_id'])}}" enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
             <div class="form-group">
-                <label class="col-sm-3 col-form-label">Role</label>
+                <label class="col-sm-3 col-form-label">Current Password</label>
                 <div class="col-sm-12">
-                    <select class="form-select" name="role">
-                        <option value="A" {{$user['role'] =='A' ? 'selected' : ""}}>Admin</option>
-                        <option value="L" {{$user['role'] =='L' ? 'selected' : ""}}>Lecturer</option>
-                        <option value="T" {{$user['role'] =='T' ? 'selected' : ""}}>Trainee</option>
-                    </select>
-                    @error('role')
+                    <input type="password" name="current_password" class="form-control @error('current_password') is-invalid @enderror" required>
+                    @error('current_password')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                     @enderror
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-form-label">Password</label>
+                <div class="col-sm-12">
+                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                    @error('password')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 col-form-label">Confirm Password</label>
+                <div class="col-sm-12">
+                    <input type="password" name="password_confirmation" class="form-control" required>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary btn-fw">Submit</button>
