@@ -15,42 +15,58 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        echo ("--ADDING USERS--\n");
+        echo ("-- DELETING EXISTING DATA --\n");
+        echo ("DELETING USER DATA...");
+        DB::delete('delete from users');
+        echo ("[OK]\n");
+
+        echo ("DELETING CATEGORY DATA...");
+        DB::delete('delete from categories');
+        echo ("[OK]\n");
+
+        echo ("-- USERS --\n");
+        echo ("Adding user 'Admin User'...");
         DB::table('users')->insert([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
             'role' => 'A',
         ]);
-        echo ("User 'Admin User' added\n");
+        echo ("[OK]\n");
 
+        echo ("ADDING USER 'Lecturer User'...");
         DB::table('users')->insert([
             'name' => 'Lecturer User',
             'email' => 'lecturer@example.com',
             'password' => Hash::make('password'),
             'role' => 'L',
         ]);
-        echo ("User 'Professor User' added\n");
+        echo ("[OK]\n");
 
+        echo ("ADDING USER 'Trainee User'...");
         DB::table('users')->insert([
             'name' => 'Trainee User',
             'email' => 'trainee@example.com',
             'password' => Hash::make('password'),
             'role' => 'T',
         ]);
-        echo ("User 'Trainee User' added\n\n");
+        echo ("[OK]\n");
 
-        echo ("--ADDING CATEGORIES--\n");
+        echo ("-- CATEGORIES --\n");
+        echo ("ADDING CATEGORY 'Web Vulnerabilities'...");
         DB::table('categories')->insert([
             'name' => 'Web Vulnerabilities',
             'training_type' => 'R'
         ]);
-        echo ("Category 'Web Vulnerabilities' added\n");
+        echo ("[OK]\n");
 
+        echo ("ADDING CATEGORY 'Monitoring'...");
         DB::table('categories')->insert([
             'name' => 'Monitoring',
             'training_type' => 'B'
         ]);
-        echo ("Category 'Monitoring' added\n");
+        echo ("[OK]\n");
+
+        echo ("\nSEEDING COMPLETE\n\n");
     }
 }
