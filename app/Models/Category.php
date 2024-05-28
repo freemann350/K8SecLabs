@@ -16,7 +16,7 @@ class Category extends Model
         'training_type'
     ];
 
-    public function definitons(): HasMany
+    public function definitions(): HasMany
     {
         return $this->hasMany(Definition::class, 'category_id', 'category_id');
     }

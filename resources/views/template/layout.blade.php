@@ -63,54 +63,57 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item nav-category">My pages</li>
-            <li class="nav-item {{ Route::currentRouteName() == 'Dashboard' ? 'active' : '' }}">
-              <a class="nav-link" href="{{ route ('Dashboard') }}">
-                <i class="menu-icon mdi mdi-grid"></i>
-                <span class="menu-title">Dashboard</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link {{ (Route::currentRouteName() == 'User.editMe' && Auth::user()->id == request()->route('User')) ? 'active' : '' }}" href="{{route('User.editMe')}}">
-                <i class="menu-icon mdi mdi-account-box"></i>
-                <span class="menu-title">My information</span>
-              </a>
-            </li>
-            @if (Auth::user()->role == "A")
-            <li class="nav-item">
-              <a class="nav-link {{ Route::currentRouteName() == 'Users.index' ? 'active' : '' }}" href="{{route('Users.index')}}">
-                <i class="menu-icon mdi mdi-account-supervisor"></i>
-                <span class="menu-title">Users</span>
-              </a>
-            </li>
-            @endif
+          <li class="nav-item {{ Route::currentRouteName() == 'Dashboard' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route ('Dashboard') }}">
+              <i class="menu-icon mdi mdi-grid"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link {{ (Route::currentRouteName() == 'User.editMe' && Auth::user()->id == request()->route('User')) ? 'active' : '' }}" href="{{route('User.editMe')}}">
+              <i class="menu-icon mdi mdi-account-box"></i>
+              <span class="menu-title">My information</span>
+            </a>
+          </li>
+          @if (Auth::user()->role == "A")
+          <li class="nav-item">
+            <a class="nav-link {{ Route::currentRouteName() == 'Users.index' ? 'active' : '' }}" href="{{route('Users.index')}}">
+              <i class="menu-icon mdi mdi-account-supervisor"></i>
+              <span class="menu-title">Users</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {{ Route::currentRouteName() == 'Categories.index' ? 'active' : '' }}" href="{{route('Categories.index')}}">
+              <i class="menu-icon mdi mdi-view-list"></i>
+              <span class="menu-title">Categories</span>
+            </a>
+          </li>
+          @endif
           <li class="nav-item nav-category">Definitions</li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="menu-icon mdi mdi-file-cabinet"></i>
-                <span class="menu-title">My Definitions</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="menu-icon mdi mdi-store"></i>
-                <span class="menu-title">Definition Catalog</span>
-              </a>
-            </li>
+          <li class="nav-item {{ Route::currentRouteName() == 'Definitions.index' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('Definitions.index') }}">
+              <i class="menu-icon mdi mdi-file-cabinet"></i>
+              <span class="menu-title">My Definitions</span>
+            </a>
+          </li>
+          <li class="nav-item {{ Route::currentRouteName() == 'Definitions.create' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('Definitions.create') }}">
+              <i class="menu-icon mdi mdi-store"></i>
+              <span class="menu-title">Definition Catalog</span>
+            </a>
           </li>
           <li class="nav-item nav-category">Environments</li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="menu-icon mdi mdi-clipboard-flow"></i>
-                <span class="menu-title">Past environments</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i class="menu-icon mdi mdi-view-grid-plus"></i>
-                <span class="menu-title">New environment</span>
-              </a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="menu-icon mdi mdi-clipboard-flow"></i>
+              <span class="menu-title">Past environments</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="menu-icon mdi mdi-view-grid-plus"></i>
+              <span class="menu-title">New environment</span>
+            </a>
           </li>
           <li class="nav-item nav-category"></li>
           <li class="nav-item">
@@ -243,6 +246,4 @@
   <!-- endinject -->
   </script>
 </body>
-
 </html>
-
