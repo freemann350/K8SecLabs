@@ -9,7 +9,7 @@
       <form method="POST" action="{{ route('Definitions.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
-          <label class="col-sm-3 col-form-label">Name</label>
+          <label class="col-sm-3 col-form-label">Name *</label>
           <div class="col-sm-12">
             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="Definition name" required>
             @error('name')
@@ -18,46 +18,36 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 col-form-label">Path</label>
+          <label class="col-sm-3 col-form-label">Category *</label>
           <div class="col-sm-12">
-            <input type="text" name="path" class="form-control @error('path') is-invalid @enderror" value="{{ old('path') }}" placeholder="Definition path" required>
-            @error('path')
-              <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 col-form-label">Category</label>
-          <div class="col-sm-12">
-            <select class="form-select" name="category_id">
+            <select class="form-select" name="category">
               @foreach($categories as $category)
                 <option value="{{ $category->category_id }}">{{ $category->name }}</option>
               @endforeach
             </select>
-            @error('category_id')
+            @error('category')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
         </div>
+
         <div class="form-group">
-          <label class="col-sm-3 col-form-label">User</label>
+          <label class="col-sm-3 col-form-label">Definition (JSON) *</label>
           <div class="col-sm-12">
-            <select class="form-select" name="user_id">
-              @foreach($users as $user)
-                <option value="{{ $user->user_id }}">{{ $user->name }}</option>
-              @endforeach
-            </select>
-            @error('user_id')
+            <div class="mb-3">
+              <input class="form-control form-control-sm file-upload-info" type="file" name="definition">
+            </div>
+            @error('definition')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 col-form-label">Private</label>
+          <label class="col-sm-3 col-form-label">Privacy *</label>
           <div class="col-sm-12">
             <select class="form-select" name="private">
-              <option value="1">Yes</option>
-              <option value="0">No</option>
+              <option value="0">Public</option>
+              <option value="1">Private</option>
             </select>
             @error('private')
               <div class="invalid-feedback">{{ $message }}</div>
@@ -69,15 +59,6 @@
           <div class="col-sm-12">
             <textarea name="description" class="form-control @error('description') is-invalid @enderror" placeholder="Description">{{ old('description') }}</textarea>
             @error('description')
-              <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="col-sm-3 col-form-label">Checksum</label>
-          <div class="col-sm-12">
-            <input type="text" name="checksum" class="form-control @error('checksum') is-invalid @enderror" value="{{ old('checksum') }}" placeholder="Checksum">
-            @error('checksum')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>

@@ -12,7 +12,6 @@
           <table class="table table-hover table-striped" style="text-align:center" id="dt">
               <thead>
               <tr>
-                  <th>#</th>
                   <th>Name</th>
                   <th>Training Type</th>
                   <th>Actions</th>
@@ -21,7 +20,6 @@
               <tbody>
               @foreach($categories as $category)
               <tr>
-                <td>{{ $category->category_id }}</td> {{-- Updated to use object notation --}}
                 <td>{{ $category->name }}</td>
                 <td>
                     @if($category->training_type == 'R')

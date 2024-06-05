@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\DefinitionRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Definition;
 use App\Models\Category;
 use App\Models\User;
@@ -11,8 +14,14 @@ class DefinitionController extends Controller
 {
     public function index()
     {
-        $definitions = Definition::all();
+        $definitions = Definition::where('user_id', Auth::user()->user_id)->get();
         return view('definitions.index', compact('definitions'));
+    }
+
+    public function catalog()
+    {
+        $definitions = Definition::all();
+        return view('definitions.catalog', compact('definitions'));
     }
 
     public function create()
@@ -22,22 +31,29 @@ class DefinitionController extends Controller
         return view('definitions.create', compact('categories', 'users'));
     }
 
-    public function store(Request $request)
+    public function store(DefinitionRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'path' => 'required',
-            'category_id' => 'required',
-            'user_id' => 'required',
-            'private' => 'required',
-            'description' => 'nullable',
-            'checksum' => 'nullable',
-            'tags' => 'nullable',
+        $formData = $request->validated();
+
+        $definitionId = Definition::create([
+            'name' => $formData['name'],
+            'user_id' => Auth::user()->user_id,
+            'category_id' => $formData['category'],
+            'path' => 0,
+            'description' => $formData['description'],
+            'private' => $formData['private'] == 1 ? true : false,
+            'tags' => $formData['tags'],
         ]);
 
-        Definition::create($request->all());
+        $file = $formData['definition'];
+        $fileName = $formData['name'] . '.json';
+        $filePath = 'definitions/' . $fileName;
+        Storage::put($filePath, file_get_contents($file));
 
-        return redirect()->route('definitions.index')->with('success-msg', 'Definition created successfully.');
+        $definitionId->path = $filePath;
+        $definitionId->save();
+
+        return redirect()->route('Definitions.index')->with('success-msg', 'Definition created successfully.');
     }
 
     public function show($id)
@@ -51,41 +67,29 @@ class DefinitionController extends Controller
         $definition = Definition::find($id);
         $categories = Category::all();
         $users = User::all();
-        return view('definitions.edit', compact('definition', 'categories', 'users'));
+        return view('Definitions.edit', compact('definition', 'categories', 'users'));
     }
 
-    public function update(Request $request, $id)
+    public function update(DefinitionRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'path' => 'required',
-            'category_id' => 'required',
-            'user_id' => 'required',
-            'private' => 'required',
-            'description' => 'nullable',
-            'checksum' => 'nullable',
-            'tags' => 'nullable',
-        ]);
-
+        $formData = $request->validated();
+        
         $definition = Definition::find($id);
         $definition->update($request->all());
 
-        return redirect()->route('definitions.index')->with('success-msg', 'Definition updated successfully.');
+        return redirect()->route('Definitions.index')->with('success-msg', 'Definition updated successfully.');
     }
 
     public function destroy($id)
     {
-        $definition = Definition::find($id);
+        $definition = Definition::findOrFail($id);
+        
+        if (Storage::exists($definition->path)) {
+            Storage::delete($definition->path);
+        }
+
         $definition->delete();
 
-        return redirect()->route('definitions.index')->with('success-msg', 'Definition deleted successfully.');
-    }
-
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        $definitions = Definition::where('name', 'LIKE', "%{$keyword}%")->get();
-
-        return view('definitions.index', compact('definitions'));
+        return redirect()->route('Definitions.index')->with('success-msg', 'Definition deleted successfully.');
     }
 }

@@ -75,41 +75,42 @@
               <span class="menu-title">My information</span>
             </a>
           </li>
+          <li class="nav-item nav-category">Administration</li>
           @if (Auth::user()->role == "A")
-          <li class="nav-item">
-            <a class="nav-link {{ Route::currentRouteName() == 'Users.index' ? 'active' : '' }}" href="{{route('Users.index')}}">
+          <li class="nav-item {{ Route::currentRouteName() == 'Users.index' ? 'active' : '' }}">
+            <a class="nav-link" href="{{route('Users.index')}}">
               <i class="menu-icon mdi mdi-account-supervisor"></i>
               <span class="menu-title">Users</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link {{ Route::currentRouteName() == 'Categories.index' ? 'active' : '' }}" href="{{route('Categories.index')}}">
+          <li class="nav-item {{ str_contains(Route::currentRouteName(),'Categories.') ? 'active' : '' }}">
+            <a class="nav-link" href="{{route('Categories.index')}}">
               <i class="menu-icon mdi mdi-view-list"></i>
               <span class="menu-title">Categories</span>
             </a>
           </li>
           @endif
           <li class="nav-item nav-category">Definitions</li>
-          <li class="nav-item {{ Route::currentRouteName() == 'Definitions.index' ? 'active' : '' }}">
+          <li class="nav-item {{ (Route::currentRouteName() != 'Definitions.catalog' && str_contains(Route::currentRouteName(),'Definitions.')) ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('Definitions.index') }}">
               <i class="menu-icon mdi mdi-file-cabinet"></i>
               <span class="menu-title">My Definitions</span>
             </a>
           </li>
-          <li class="nav-item {{ Route::currentRouteName() == 'Definitions.create' ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('Definitions.create') }}">
+          <li class="nav-item {{ Route::currentRouteName() == 'Definitions.catalog' ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('Definitions.catalog') }}">
               <i class="menu-icon mdi mdi-store"></i>
               <span class="menu-title">Definition Catalog</span>
             </a>
           </li>
           <li class="nav-item nav-category">Environments</li>
-          <li class="nav-item">
+          <li class="nav-item {{ str_contains(Route::currentRouteName(),'Environments.') ? 'active' : '' }}">
             <a class="nav-link" href="#">
               <i class="menu-icon mdi mdi-clipboard-flow"></i>
               <span class="menu-title">Past environments</span>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {{ str_contains(Route::currentRouteName(),'Environments.') ? 'active' : '' }}">
             <a class="nav-link" href="#">
               <i class="menu-icon mdi mdi-view-grid-plus"></i>
               <span class="menu-title">New environment</span>

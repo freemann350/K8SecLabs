@@ -69,10 +69,7 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
         - [ ] Read
 
 - Backend
-  - [x] Select kubernetes distribution
-    - k3s
   - [ ] Connection to the cluster
-  - [x] API Authentication
   - Deploying environments
     - [ ] Create Namespace
     - [ ] Create Pods

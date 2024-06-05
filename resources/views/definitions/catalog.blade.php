@@ -13,7 +13,7 @@
           <tr>
             <th>Name</th>
             <th>Category</th>
-            <th>Privacy</th>
+            <th>Created By</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -22,11 +22,10 @@
           <tr>
             <td>{{ $definition->name }}</td>
             <td>{{ $definition->category->name }}</td>
-            <td>{{ $definition->private ? 'Private' : 'Public' }}</td>
+            <td>{{ $definition->user->name }}</td>
             <td>
+                <a class="btn btn-outline-success btn-fw btn-rounded btn-sm"  href="#"><i class="mdi mdi-playlist-plus"></i></a>
                 <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="{{route('Definitions.show',$definition->definition_id)}}"><i class="mdi mdi-information-outline"></i></a>
-                <a class="btn btn-outline-dark btn-fw btn-rounded btn-sm" href="{{ route('Definitions.edit', $definition->definition_id) }}"><i class="mdi mdi-pencil"></i></a>
-                <a class="btn btn-outline-danger btn-fw btn-rounded btn-sm" href="#" onclick="_delete('Are you sure you want to delete the definition &quot;{{ $definition->name }}&quot; ({{ $definition->definition_id }})','{{ route("Definitions.destroy", $definition->definition_id) }}')"><i class="mdi mdi-trash-can-outline"></i></a>
             </td>
           </tr>
           @endforeach
