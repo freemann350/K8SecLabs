@@ -105,7 +105,7 @@
           </li>
           <li class="nav-item nav-category">Environments</li>
           <li class="nav-item {{ str_contains(Route::currentRouteName(),'Environments.') ? 'active' : '' }}">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ route('Environments.index') }}">
               <i class="menu-icon mdi mdi-clipboard-flow"></i>
               <span class="menu-title">Past environments</span>
             </a>
@@ -165,7 +165,7 @@
     <script>
         let table = new DataTable('#dt', {});
     </script>
-    @endif
+  @endif
 
   @include('template/scripts/swal')
 

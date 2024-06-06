@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('environments', function (Blueprint $table) {
             $table->id('id');
+            $table->string('name',50);
             $table->foreignId('user_definition_id')->constrained('user_definitions')->onDelete('cascade');
             $table->string('access_code',20);
-            $table->integer('qty');
+            $table->integer('quantity');
             $table->timestamp('end_date')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();

@@ -50,12 +50,12 @@ class User extends Authenticatable
         ];
     }
 
-    public function user_definitions(): HasMany
+    public function userDefinitions(): HasMany
     {
         return $this->hasMany(UserDefinition::class, 'user_id', 'id');
     }
 
-    public function environment_access(): HasMany
+    public function environmentAccesses(): HasMany
     {
         return $this->hasMany(EnvironmentAccess::class, 'user_id', 'id');
     }

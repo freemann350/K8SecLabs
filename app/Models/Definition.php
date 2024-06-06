@@ -22,7 +22,7 @@ class Definition extends Model
         'tags'
     ];
     
-    public function user_definition(): HasMany
+    public function userDefinitions(): HasMany
     {
         return $this->hasMany(UserDefinition::class, 'definition_id', 'id');
     }

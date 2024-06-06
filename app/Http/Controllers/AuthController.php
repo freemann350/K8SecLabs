@@ -11,11 +11,6 @@ class AuthController extends Controller
 {
     public function index(): View
     {
-        /*$process = new Process(['ls', '/var/www/html']);
-        
-        $process->run();
-        dd($process->getOutput());*/
-        //dd(env('K8S_BEARER_TOKEN'));
         return view('auth.login');
     }
 

@@ -10,13 +10,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class UserDefinition extends Model
 {
     use HasFactory;
+    protected $table = 'user_definitions';
 
     protected $fillable = [
         'user_id',
         'definition_id'
     ];
 
-    public function environment(): HasMany
+    public function environments(): HasMany
     {
         return $this->hasMany(Environment::class, 'user_definition_id', 'id');
     }

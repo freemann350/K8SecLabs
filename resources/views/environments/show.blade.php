@@ -22,7 +22,7 @@
                         <h4 class="card-title">Variables</h4>
                         @if (isset($variables) && count($variables)>0)
                         @foreach($variables as $variable)
-                            <label class="badge badge-dark" style="margin:5px 0 5px 0">{{$variable}}</label> &nbsp;
+                            <label class="badge badge-dark">{{$variable}}</label> &nbsp;
                         @endforeach
                         @else
                             <p class="mb-2">No definition variables were detected</p>
@@ -34,7 +34,7 @@
                         <h4 class="card-title">Tags</h4>
                         @if (isset($tags))
                         @foreach($tags as $tag)
-                            <label class="badge badge-info" style="margin:5px 0 5px 0">#{{$tag}}</label> &nbsp;
+                            <label class="badge badge-info">#{{$tag}}</label> &nbsp;
                         @endforeach
                         @else
                             <p class="mb-2">There are no tags on this definition</p>

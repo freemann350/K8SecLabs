@@ -58,4 +58,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/DefinitionsCatalog','catalog')->name("Definitions.catalog");
         Route::get('/DownloadDefinition/{id}','download')->name("Definitions.download");
     })->middleware(AdminMiddleware::class);
+
+    Route::controller(EnvironmentController::class)->group(function () {
+        Route::resource('/Environments',EnvironmentController::class);
+    })->middleware(AdminMiddleware::class);
 });
