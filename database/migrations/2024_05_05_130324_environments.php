@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('environments', function (Blueprint $table) {
-            $table->id('environment_id');
-            $table->foreignId('user_definition_id')->constrained('user_definitions', 'user_definition_id')->onDelete('cascade');
+            $table->id('id');
+            $table->foreignId('user_definition_id')->constrained('user_definitions')->onDelete('cascade');
             $table->string('access_code',20);
             $table->integer('qty');
             $table->timestamp('end_date')->nullable();

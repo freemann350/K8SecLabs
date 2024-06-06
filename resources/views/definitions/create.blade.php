@@ -22,7 +22,7 @@
           <div class="col-sm-12">
             <select class="form-select" name="category">
               @foreach($categories as $category)
-                <option value="{{ $category->category_id }}">{{ $category->name }}</option>
+                <option value="{{ $category->id }}">{{ $category->name }}</option>
               @endforeach
             </select>
             @error('category')
@@ -58,6 +58,7 @@
           <label class="col-sm-3 col-form-label">Description</label>
           <div class="col-sm-12">
             <textarea name="description" class="form-control @error('description') is-invalid @enderror" placeholder="Description">{{ old('description') }}</textarea>
+            <small class="form-text text-muted">Note: HTML elements are allowed</small>
             @error('description')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -67,6 +68,7 @@
           <label class="col-sm-3 col-form-label">Tags</label>
           <div class="col-sm-12">
             <input type="text" name="tags" class="form-control @error('tags') is-invalid @enderror" value="{{ old('tags') }}" placeholder="Tags">
+            <small class="form-text text-muted">Must be separated by commas (i.e.: tag1,tag 2,tag_3)</small>
             @error('tags')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror

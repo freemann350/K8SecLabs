@@ -13,7 +13,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
     use SoftDeletes;
-    protected $primaryKey = 'user_id';
 
     /**
      * The attributes that are mass assignable.
@@ -53,16 +52,16 @@ class User extends Authenticatable
 
     public function user_definitions(): HasMany
     {
-        return $this->hasMany(User_Definition::class, 'user_id', 'user_id');
+        return $this->hasMany(UserDefinition::class, 'user_id', 'id');
     }
 
     public function environment_access(): HasMany
     {
-        return $this->hasMany(Environment_Access::class, 'user_id', 'user_id');
+        return $this->hasMany(EnvironmentAccess::class, 'user_id', 'id');
     }
 
     public function definitions(): HasMany
     {
-        return $this->hasMany(Definition::class, 'user_id', 'user_id');
+        return $this->hasMany(Definition::class, 'user_id', 'id');
     }
 }

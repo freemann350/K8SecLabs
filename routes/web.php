@@ -54,6 +54,8 @@ Route::middleware('auth')->group(function () {
     
     Route::controller(DefinitionController::class)->group(function () {
         Route::resource('/Definitions',DefinitionController::class);
+        Route::put('/DefinitionsFile/{Definition}','updateDefinition')->name("Definitions.updateDefinition");
         Route::get('/DefinitionsCatalog','catalog')->name("Definitions.catalog");
+        Route::get('/DownloadDefinition/{id}','download')->name("Definitions.download");
     })->middleware(AdminMiddleware::class);
 });

@@ -22,14 +22,14 @@
               <tbody>
               @foreach($users as $user)
               <tr>
-                <td>{{$user['user_id']}}</td>
+                <td>{{$user['id']}}</td>
                 <td>{{$user['name']}}</td>
                 <td>{{$user['email']}}</td>
                 <td>{{$user['role']}}</td>
                 <td>
-                    <a class="btn btn-outline-dark btn-fw btn-rounded btn-sm"  href="{{$user['user_id'] == Auth::user()->user_id ? route('User.editMe') : route('Users.edit',$user['user_id'])}}"><i class="mdi mdi-pencil"></i></a>
-                    @if (Auth::user()->user_id != $user['user_id'])
-                    <a class="btn btn-outline-danger btn-fw btn-rounded btn-sm" href="#" onclick="_delete('Are you sure you want to delete the user &quot;{{$user["name"]}}&quot; ({{$user["user_id"]}})','{{ route("Users.destroy",$user['user_id']) }}')"><i class="mdi mdi-trash-can-outline"></i></a>
+                    <a class="btn btn-outline-dark btn-fw btn-rounded btn-sm"  href="{{$user['id'] == Auth::user()->id ? route('User.editMe') : route('Users.edit',$user['id'])}}"><i class="mdi mdi-pencil"></i></a>
+                    @if (Auth::user()->id != $user['id'])
+                    <a class="btn btn-outline-danger btn-fw btn-rounded btn-sm" href="#" onclick="_delete('Are you sure you want to delete the user &quot;{{$user["name"]}}&quot; ({{$user["id"]}})','{{ route("Users.destroy",$user['id']) }}')"><i class="mdi mdi-trash-can-outline"></i></a>
                     @endif
                 </td>
               </tr>

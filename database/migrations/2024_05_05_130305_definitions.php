@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('definitions', function (Blueprint $table) {
-            $table->id('definition_id');
-            $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
-            $table->foreignId('category_id')->constrained('categories', 'category_id')->onDelete('cascade');
+            $table->id('id');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('name',50);
             $table->string('path',50);
             $table->string('description',4000)->nullable();
             $table->boolean('private');
             $table->string('checksum',100)->nullable();
-            $table->string('tags',50)->nullable();
+            $table->string('tags',200)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

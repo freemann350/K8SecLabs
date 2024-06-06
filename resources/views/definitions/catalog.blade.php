@@ -24,8 +24,9 @@
             <td>{{ $definition->category->name }}</td>
             <td>{{ $definition->user->name }}</td>
             <td>
+                <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="{{route('Definitions.show',$definition->id)}}"><i class="mdi mdi-information-outline"></i></a>
                 <a class="btn btn-outline-success btn-fw btn-rounded btn-sm"  href="#"><i class="mdi mdi-playlist-plus"></i></a>
-                <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="{{route('Definitions.show',$definition->definition_id)}}"><i class="mdi mdi-information-outline"></i></a>
+                <a class="btn btn-outline-dark btn-fw btn-rounded btn-sm"  href="{{route('Definitions.download',$definition->id)}}"><i class="mdi mdi-file-download"></i></a>
             </td>
           </tr>
           @endforeach

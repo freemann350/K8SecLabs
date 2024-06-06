@@ -46,7 +46,7 @@ class UserPolicy
     // For both password and information
     public function updateMe(User $user): Response
     {
-        return $user->user_id === auth()->user()->user_id
+        return $user->id === auth()->user()->id
             ? Response::allow()
             : Response::denyAsNotFound();
     }

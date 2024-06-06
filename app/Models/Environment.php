@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Environment extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'environment_id';
 
     protected $fillable = [
         'user_definition_id',
@@ -22,11 +21,11 @@ class Environment extends Model
     
     public function user_definition(): BelongsTo
     {
-        return $this->belongsTo(User_Definition::class, 'user_definiton_id', 'user_definiton_id');
+        return $this->belongsTo(UserDefinition::class, 'user_definiton_id', 'id');
     }
 
     public function environment_access(): HasMany
     {
-        return $this->hasMany(Environment_Access::class, 'environment_id', 'environment_id');
+        return $this->hasMany(EnvironmentAccess::class, 'environment_id', 'id');
     }
 }

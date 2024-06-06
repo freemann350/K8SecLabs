@@ -55,7 +55,7 @@ class UserController extends Controller
 
     public function editMe(): View
     {
-        $user = User::findOrFail(auth()->user()->user_id);
+        $user = User::findOrFail(auth()->user()->id);
 
         return view('users.editMe', ['user' => $user]);
     }
@@ -63,7 +63,7 @@ class UserController extends Controller
     public function updateMe(UserSelfUpdateRequest $request)
     {
         $formData = $request->validated();
-        $user = User::findOrFail(auth()->user()->user_id);
+        $user = User::findOrFail(auth()->user()->id);
         $user->update($formData);
         
         return redirect()->back()->withInput()->with('success-msg', "Your information was updated with success");

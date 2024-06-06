@@ -9,7 +9,7 @@
             <p class="card-description">
                 Here you can edit a category
             </p>
-            <form method="POST" action="{{ route('Categories.update', $category->category_id) }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('Categories.update', $category->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="form-group">

@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Environment_Access extends Model
+class EnvironmentAccess extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'environment_access_id';
 
     protected $fillable = [
         'environment_id',
@@ -21,11 +20,11 @@ class Environment_Access extends Model
     
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function environment(): BelongsTo
     {
-        return $this->belongsTo(Environment::class, 'environment_id', 'environment_id');
+        return $this->belongsTo(Environment::class, 'environment_id', 'id');
     }
 }

@@ -43,15 +43,16 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
       - [ ] Delete
   - Professors
     - Categories
-      - [ ] Create
-      - [ ] Read
-      - [ ] Update
-      - [ ] Delete
+      - [x] Create
+      - [x] Read
+      - [x] Update
+      - [x] Delete
     - Definitions
-      - [ ] Create
-      - [ ] Read
-      - [ ] Update
-      - [ ] Delete
+      - [x] Create
+      - [x] Read
+      - [x] Download
+      - [x] Update
+      - [x] Delete
       - [ ] Add other professors definitions to themselves
     - Environments
       - [ ] Create
@@ -67,11 +68,3 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
         - [ ] Access
         - [ ] History
         - [ ] Read
-
-- Backend
-  - [ ] Connection to the cluster
-  - Deploying environments
-    - [ ] Create Namespace
-    - [ ] Create Pods
-  - Deleting environments
-    - [ ] Delete Namespace (assuming it will also delete all pods)

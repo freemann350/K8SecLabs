@@ -75,8 +75,8 @@
               <span class="menu-title">My information</span>
             </a>
           </li>
-          <li class="nav-item nav-category">Administration</li>
           @if (Auth::user()->role == "A")
+          <li class="nav-item nav-category">Administration</li>
           <li class="nav-item {{ Route::currentRouteName() == 'Users.index' ? 'active' : '' }}">
             <a class="nav-link" href="{{route('Users.index')}}">
               <i class="menu-icon mdi mdi-account-supervisor"></i>
@@ -161,90 +161,18 @@
   <script src="{{ url('js/main/jquery.min.js') }}"></script>
   <script src="{{ url('js/main/toastr.min.js') }}"></script>
   <script src="{{ url('js/main/sweetalert2@11.js') }}"></script>
-  <script>
-    let table = new DataTable('#dt');
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // Get the link element
-      var logout = document.getElementById("logout");
-
-      // Add click event listener
-      logout.addEventListener("click", function(event) {
-          // Prevent default link behavior
-          event.preventDefault();
-
-          // Execute SweetAlert code
-          Swal.fire({
-              title: "Are you sure you want to leave?",
-              text: "There's more networking to be done",
-              icon: "question",
-              showCancelButton: true,
-              confirmButtonColor: "#3085d6",
-              cancelButtonColor: "#d33",
-              cancelButtonText: "No",
-              confirmButtonText: "Yes"
-          }).then((result) => {
-              if (result.isConfirmed) {
-                window.location.href = '{{ route('Auth.logout') }}';
-              }
-          });
-      });
-    });
-
-    function _delete(msg, route) {
-        Swal.fire({
-            title: "Delete",
-            text: msg,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            cancelButtonText: "No",
-            confirmButtonText: "Yes"
-        }).then((result) => {
-            if (result.isConfirmed) {
-              // Create a form element
-              const form = document.createElement('form');
-              form.method = 'POST';
-              form.action = route;
-              form.innerHTML = `
-                  @csrf
-                  @method('DELETE')
-              `;
-              // Append the form to the document body and submit it
-              document.body.appendChild(form);
-              form.submit();
-            }
-        });
-    };
-
-    toastr.options = {
-      "closeButton": false,
-      "debug": false,
-      "newestOnTop": false,
-      "progressBar": true,
-      "positionClass": "toast-top-right",
-      "preventDuplicates": false,
-      "onclick": null,
-      "showDuration": "300",
-      "hideDuration": "1000",
-      "timeOut": "5000",
-      "extendedTimeOut": "1000",
-      "showEasing": "swing",
-      "hideEasing": "linear",
-      "showMethod": "fadeIn",
-      "hideMethod": "fadeOut"
-    }
-
-    @if (session('error-msg'))
-      toastr.error('{{session('error-msg')['message']}} ({{session('error-msg')['error']}})<br>{{session('error-msg')['detail']}}', 'A problem has occurred')
+  @if (str_contains(Route::currentRouteName(),'.index') || str_contains(Route::currentRouteName(),'.catalog'))
+    <script>
+        let table = new DataTable('#dt', {});
+    </script>
     @endif
 
-    @if (session('success-msg'))
-      toastr.success('{{session('success-msg')}}','Success!')
-    @endif
-  <!-- endinject -->
-  </script>
+  @include('template/scripts/swal')
+
+  @include('template/scripts/toastr')
+
+  @if (isset($json))
+      @include('template/scripts/prettyJson')
+  @endif
 </body>
 </html>

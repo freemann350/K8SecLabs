@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -19,12 +20,9 @@ class CategoryController extends Controller
         return view('categories.create');
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $request->validate([
-            'name' => 'required|unique:categories|max:50',
-            'training_type' => 'required|in:R,B,U',
-        ]);
+        $formData = $request->validated();
 
         Category::create($request->all());
         return redirect()->route('Categories.index')->with('success', 'Category created successfully.');
@@ -36,14 +34,11 @@ class CategoryController extends Controller
         return view('categories.edit', compact('category'));
     }
 
-    public function update(Request $request, $category_id)
+    public function update(CategoryRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|max:50|unique:categories,name,' . $category_id . ',category_id',
-            'training_type' => 'required|in:R,B,U',
-        ]);        
+        $formData = $request->validated();  
 
-        $category = Category::findOrFail($category_id);
+        $category = Category::findOrFail($id);
         $category->update($request->all());
 
         return redirect()->route('Categories.index')->with('success', 'Category updated successfully.');

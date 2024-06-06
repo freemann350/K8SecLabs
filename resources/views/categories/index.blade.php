@@ -31,8 +31,8 @@
                     @endif
                 </td>
                 <td>
-                    <a class="btn btn-outline-dark btn-fw btn-rounded btn-sm" href="{{ route('Categories.edit', $category->category_id) }}"><i class="mdi mdi-pencil"></i></a>
-                    <a class="btn btn-outline-danger btn-fw btn-rounded btn-sm" href="#" onclick="_delete('Are you sure you want to delete the category &quot;{{ $category->name }}&quot; ({{ $category->category_id }})','{{ route("Categories.destroy", $category->category_id) }}')"><i class="mdi mdi-trash-can-outline"></i></a>
+                    <a class="btn btn-outline-dark btn-fw btn-rounded btn-sm" href="{{ route('Categories.edit', $category->id) }}"><i class="mdi mdi-pencil"></i></a>
+                    <a class="btn btn-outline-danger btn-fw btn-rounded btn-sm" href="#" onclick="_delete('Are you sure you want to delete the category &quot;{{ $category->name }}&quot; ({{ $category->id }})','{{ route("Categories.destroy", $category->id) }}')"><i class="mdi mdi-trash-can-outline"></i></a>
                 </td>
               </tr>
               @endforeach

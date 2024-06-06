@@ -9,7 +9,7 @@
             <p class="card-description">
                 Here you can add edit a user
             </p>
-            <form method="POST" action="{{route('Users.update',$user['user_id'])}}" enctype="multipart/form-data">
+            <form method="POST" action="{{route('Users.update',$user['id'])}}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-group">
