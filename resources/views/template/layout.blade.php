@@ -80,40 +80,59 @@
           <li class="nav-item {{ Route::currentRouteName() == 'Users.index' ? 'active' : '' }}">
             <a class="nav-link" href="{{route('Users.index')}}">
               <i class="menu-icon mdi mdi-account-supervisor"></i>
-              <span class="menu-title">Users</span>
-            </a>
-          </li>
-          <li class="nav-item {{ str_contains(Route::currentRouteName(),'Categories.') ? 'active' : '' }}">
-            <a class="nav-link" href="{{route('Categories.index')}}">
-              <i class="menu-icon mdi mdi-view-list"></i>
-              <span class="menu-title">Categories</span>
+              <span class="menu-title">User management</span>
             </a>
           </li>
           @endif
-          <li class="nav-item nav-category">Definitions</li>
-          <li class="nav-item {{ (Route::currentRouteName() != 'Definitions.catalog' && str_contains(Route::currentRouteName(),'Definitions.')) ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('Definitions.index') }}">
+          <li class="nav-item nav-category">Lecturering</li>
+          <li class="nav-item {{ str_contains(Route::currentRouteName(),'Categories.') ? 'active' : '' }}">
+            <a class="nav-link" data-bs-toggle="collapse" data-bs-toggle="collapse" href="#categories" aria-expanded="false" aria-controls="categories">
+              <i class="menu-icon mdi mdi-shape"></i>
+              <span class="menu-title">Categories</span>
+            </a>
+            <div class="collapse {{ str_contains(Route::currentRouteName(),'Categories.') ? 'show' : '' }}" id="categories">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{{ route ('Categories.index') }}">List of Categories</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{ route ('Categories.create') }}">New Category</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item {{ str_contains(Route::currentRouteName(),'Definitions.') ? 'active' : '' }}">
+            <a class="nav-link" data-bs-toggle="collapse" data-bs-toggle="collapse" href="#definitions" aria-expanded="false" aria-controls="definitions">
               <i class="menu-icon mdi mdi-file-cabinet"></i>
-              <span class="menu-title">My Definitions</span>
+              <span class="menu-title">Definitions</span>
             </a>
-          </li>
-          <li class="nav-item {{ Route::currentRouteName() == 'Definitions.catalog' ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('Definitions.catalog') }}">
-              <i class="menu-icon mdi mdi-store"></i>
-              <span class="menu-title">Definition Catalog</span>
-            </a>
-          </li>
-          <li class="nav-item nav-category">Environments</li>
-          <li class="nav-item {{ str_contains(Route::currentRouteName(),'Environments.') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('Environments.index') }}">
-              <i class="menu-icon mdi mdi-clipboard-flow"></i>
-              <span class="menu-title">Past environments</span>
-            </a>
+            <div class="collapse {{ str_contains(Route::currentRouteName(),'Definitions.') ? 'show' : '' }}" id="definitions">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{{ route('Definitions.index') }}">My Definitions</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{ route('Definitions.catalog') }}">Definition Catalog</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{ route('Definitions.create') }}">New Definition</a></li>
+              </ul>
+            </div>
           </li>
           <li class="nav-item {{ str_contains(Route::currentRouteName(),'Environments.') ? 'active' : '' }}">
+            <a class="nav-link" data-bs-toggle="collapse" data-bs-toggle="collapse" href="#environments" aria-expanded="false" aria-controls="definitions">
+              <i class="menu-icon mdi mdi-view-grid"></i>
+              <span class="menu-title">Environments</span>
+            </a>
+            <div class="collapse {{ str_contains(Route::currentRouteName(),'Environments.') ? 'show' : '' }}" id="environments">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{{ route ('Environments.index') }}">Environment History</a></li>
+                <li class="nav-item"> <a class="nav-link" href="#">New Environment</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item nav-category">Trainees</li>
+          <li class="nav-item">
             <a class="nav-link" href="#">
-              <i class="menu-icon mdi mdi-view-grid-plus"></i>
-              <span class="menu-title">New environment</span>
+              <i class="menu-icon mdi mdi-book-variant"></i>
+              <span class="menu-title">Environment History</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="menu-icon mdi mdi-page-next"></i>
+              <span class="menu-title">Access Environment</span>
             </a>
           </li>
           <li class="nav-item nav-category"></li>

@@ -28281,7 +28281,7 @@ div.tagsinput span.tag a {
   position: absolute;
   margin-top: 16px;
   border-radius: 50%;
-  background: #b2b2b2;
+  background: transparent; /*NAV-ITEM BULLET*/
 }
 
 .sidebar .nav.sub-menu .nav-item .nav-link {
