@@ -11,6 +11,7 @@ class UserDefinition extends Model
 {
     use HasFactory;
     protected $table = 'user_definitions';
+    public $timestamps = false;
 
     protected $fillable = [
         'user_id',

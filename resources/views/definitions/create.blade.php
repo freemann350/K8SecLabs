@@ -35,7 +35,7 @@
           <label class="col-sm-3 col-form-label">Definition (JSON) *</label>
           <div class="col-sm-12">
             <div class="mb-3">
-              <input class="form-control form-control-sm file-upload-info" type="file" name="definition">
+              <input class="form-control form-control-sm file-upload-info @error('definition') is-invalid @enderror" type="file" name="definition">
             </div>
             @error('definition')
               <div class="invalid-feedback">{{ $message }}</div>

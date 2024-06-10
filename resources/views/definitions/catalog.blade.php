@@ -25,7 +25,7 @@
             <td>{{ $definition->user->name }}</td>
             <td>
                 <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="{{route('Definitions.show',$definition->id)}}"><i class="mdi mdi-information-outline"></i></a>
-                <a class="btn btn-outline-success btn-fw btn-rounded btn-sm"  href="#"><i class="mdi mdi-playlist-plus"></i></a>
+                <a class="btn btn-outline-success btn-fw btn-rounded btn-sm"  href="{{ route('Definitions.addDefinition', $definition->id) }}"><i class="mdi mdi-playlist-plus"></i></a>
                 <a class="btn btn-outline-dark btn-fw btn-rounded btn-sm"  href="{{route('Definitions.download',$definition->id)}}"><i class="mdi mdi-file-download"></i></a>
             </td>
           </tr>
@@ -34,8 +34,5 @@
       </table>
     </div>
   </div>
-</div>
-<div class="d-grid gap-2">
-  <a class="btn btn-success btn-lg btn-block" href="{{ route('Definitions.create') }}"><i class="mdi mdi-plus-circle"></i> Add new definition</a>
 </div>
 @endsection

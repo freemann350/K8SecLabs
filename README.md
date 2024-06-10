@@ -53,7 +53,7 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
       - [x] Download
       - [x] Update
       - [x] Delete
-      - [ ] Add other professors definitions to themselves
+      - [x] Add other professors definitions to themselves
     - Environments
       - [ ] Create
       - [ ] Read

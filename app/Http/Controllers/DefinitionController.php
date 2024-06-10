@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateDefinitionConfigRequest;
 use App\Http\Requests\UpdateDefinitionInfoRequest;
+use App\Models\UserDefinition;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\DefinitionRequest;
 use Illuminate\Http\Request;
@@ -17,7 +18,8 @@ class DefinitionController extends Controller
     public function index()
     {
         $definitions = Definition::where('user_id', Auth::user()->id)->get();
-        return view('definitions.index', compact('definitions'));
+        $userDefinitions = UserDefinition::where('user_id', Auth::user()->id)->get();
+        return view('definitions.index', compact('definitions','userDefinitions'));
     }
 
     public function catalog()
@@ -117,6 +119,38 @@ class DefinitionController extends Controller
         ]);
 
         return redirect()->route('Definitions.index')->with('success-msg', 'Definition updated successfully.');
+    }
+
+    public function addDefinition($id) 
+    {
+        //ToDO: VALIDATE IF DEFINITION IS PRIVATE
+        //TODO: DATATABLE 2 ON DEFINITIONS INDEX
+        
+        $user = Auth::user()->id;
+        $definition = Definition::findOrFail($id);
+        
+        $exists = UserDefinition::where("user_id",$user)->where("definition_id",$definition->id)->exists();
+        if ($exists) {
+            $errormsg['message'] = 'You already have the Definition "'.$definition->name.'"';
+            $errormsg['code'] = "405";
+            $errormsg['status'] = "Method Not Allowed";
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
+        UserDefinition::create([
+            'user_id' => Auth::user()->id,
+            'definition_id' => $id,
+        ]);
+
+        return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name.'" added sucessfully updated successfully.');
+    }
+    public function removeDefinition($id)
+    {
+        $userDefinition = UserDefinition::findOrFail($id);
+        $definition = Definition::findOrFail($userDefinition->definition_id);
+        
+        $userDefinition->delete();
+
+        return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name .'" was removed from your definitions successfully.');
     }
 
     public function destroy($id)
