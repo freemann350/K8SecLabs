@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('name',50);
             $table->string('path',50);
-            $table->string('description',4000)->nullable();
+            $table->string('description',4000);
             $table->boolean('private');
             $table->string('checksum',100)->nullable();
             $table->string('tags',200)->nullable();

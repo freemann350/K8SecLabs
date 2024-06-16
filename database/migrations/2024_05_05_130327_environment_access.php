@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('environment_access', function (Blueprint $table) {
             $table->id('id');
-            $table->foreignId('environment_id')->constrained('environments')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('address',50);
-            $table->integer('access_port');
+            $table->foreignId('environment_id')->constrained('environments')->onDelete('cascade')->n;
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->string('description',4000);
             $table->timestamp('last_access')->nullable();
             $table->timestamps();
         });

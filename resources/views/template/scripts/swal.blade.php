@@ -52,4 +52,17 @@
             }
         });
     };
+
+    function access_code(code) {
+        Swal.fire({
+            title: "The environment access code is",
+            icon: "info",
+            html: `
+                <b><h3>
+                <small class="text-muted">${code}</small>
+                </b></h3>
+            `,
+            focusConfirm: true
+        });
+      }
 </script>

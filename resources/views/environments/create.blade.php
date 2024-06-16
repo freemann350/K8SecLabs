@@ -6,50 +6,53 @@
     <div class="card-body">
       <h4 class="card-title">Add new Definition</h4>
       <p class="card-description">Here you can add a new definition</p>
-      <form method="POST" action="{{ route('Definitions.store') }}" enctype="multipart/form-data">
+      <form method="POST" action="{{ route('Environments.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
           <label class="col-sm-3 col-form-label">Name *</label>
           <div class="col-sm-12">
-            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="Definition name" required>
+            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="Your environment" required>
             @error('name')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 col-form-label">Category *</label>
+          <label class="col-sm-3 col-form-label">Definition *</label>
           <div class="col-sm-12">
-            <select class="form-select" name="category">
-              @foreach($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
+            <select class="form-select" name="definition">
+              @foreach($user_definitions as $user_definition)
+                <option value="{{ $user_definition->id }}">{{ $user_definition->definition->name }}</option>
               @endforeach
             </select>
-            @error('category')
-              <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-3 col-form-label">Definition (JSON) *</label>
-          <div class="col-sm-12">
-            <div class="mb-3">
-              <input class="form-control form-control-sm file-upload-info" type="file" name="definition">
-            </div>
             @error('definition')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 col-form-label">Privacy *</label>
+          <label class="col-sm-3 col-form-label">Access Code *</label>
           <div class="col-sm-12">
-            <select class="form-select" name="private">
-              <option value="0">Public</option>
-              <option value="1">Private</option>
-            </select>
-            @error('private')
+            <input type="text" name="access_code" class="form-control @error('access_code') is-invalid @enderror" value="{{ old('access_code') }}" placeholder="********" required>
+            @error('access_code')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 col-form-label">Quantity *</label>
+          <div class="col-sm-12">
+            <input type="text" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}" placeholder="3" required>
+            @error('quantity')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+          </div>
+        </div>        
+        <div class="form-group">
+          <label class="col-sm-3 col-form-label">Initial exposed port *</label>
+          <div class="col-sm-12">
+            <input type="text" name="port" class="form-control @error('port') is-invalid @enderror" value="{{ old('port') }}" placeholder="30000" required>
+            @error('port')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
@@ -57,25 +60,14 @@
         <div class="form-group">
           <label class="col-sm-3 col-form-label">Description</label>
           <div class="col-sm-12">
-            <textarea name="description" class="form-control @error('description') is-invalid @enderror" placeholder="Description">{{ old('description') }}</textarea>
-            <small class="form-text text-muted">Note: HTML elements are allowed</small>
+            <textarea name="description" class="form-control @error('description') is-invalid @enderror" placeholder="Description">{{ isset($definition['description']) ? $definition['description']  : '' }}</textarea>
             @error('description')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
         </div>
-        <div class="form-group">
-          <label class="col-sm-3 col-form-label">Tags</label>
-          <div class="col-sm-12">
-            <input type="text" name="tags" class="form-control @error('tags') is-invalid @enderror" value="{{ old('tags') }}" placeholder="Tags">
-            <small class="form-text text-muted">Must be separated by commas (i.e.: tag1,tag 2,tag_3)</small>
-            @error('tags')
-              <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-          </div>
-        </div>
         <button type="submit" class="btn btn-primary me-2">Submit</button>
-        <button type="button" class="btn btn-light" onclick="window.location='{{ route('Definitions.index') }}'">Cancel</button>
+        <button type="button" class="btn btn-light" onclick="window.location='{{ route('Environments.index') }}'">Cancel</button>
       </form>
     </div>
   </div>

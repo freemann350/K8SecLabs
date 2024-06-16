@@ -68,3 +68,9 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
         - [ ] Access
         - [ ] History
         - [ ] Read
+
+  - Extras
+    - [ ] Documentation for definition (Q&A)
+    - [ ] Better definition forms
+    - [ ] New scenarios
+    - [ ] Access Logs

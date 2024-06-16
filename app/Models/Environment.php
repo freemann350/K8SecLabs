@@ -12,9 +12,11 @@ class Environment extends Model
     use HasFactory;
     
     protected $fillable = [
+        'name',
         'user_definition_id',
         'access_code',
         'quantity',
+        'description',
         'end_date',
         'description'
     ];

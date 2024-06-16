@@ -62,7 +62,7 @@
       <!-- SIDEBAR -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
-          <li class="nav-item nav-category">My pages</li>
+          <li class="nav-item nav-category">Your pages</li>
           <li class="nav-item {{ Route::currentRouteName() == 'Dashboard' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route ('Dashboard') }}">
               <i class="menu-icon mdi mdi-grid"></i>
@@ -72,7 +72,7 @@
           <li class="nav-item">
             <a class="nav-link {{ (Route::currentRouteName() == 'User.editMe' && Auth::user()->id == request()->route('User')) ? 'active' : '' }}" href="{{route('User.editMe')}}">
               <i class="menu-icon mdi mdi-account-box"></i>
-              <span class="menu-title">My information</span>
+              <span class="menu-title">Your information</span>
             </a>
           </li>
           @if (Auth::user()->role == "A")
@@ -104,7 +104,7 @@
             </a>
             <div class="collapse {{ str_contains(Route::currentRouteName(),'Definitions.') ? 'show' : '' }}" id="definitions">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{{ route('Definitions.index') }}">My Definitions</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{ route('Definitions.index') }}">Your Definitions</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{ route('Definitions.catalog') }}">Definition Catalog</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{ route('Definitions.create') }}">New Definition</a></li>
               </ul>
@@ -117,8 +117,8 @@
             </a>
             <div class="collapse {{ str_contains(Route::currentRouteName(),'Environments.') ? 'show' : '' }}" id="environments">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{{ route ('Environments.index') }}">Environment History</a></li>
-                <li class="nav-item"> <a class="nav-link" href="#">New Environment</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{ route ('Environments.index') }}">Your Environments</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{ route('Environments.create') }}">New Environment</a></li>
               </ul>
             </div>
           </li>
@@ -127,12 +127,6 @@
             <a class="nav-link" href="#">
               <i class="menu-icon mdi mdi-book-variant"></i>
               <span class="menu-title">Environment History</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="menu-icon mdi mdi-page-next"></i>
-              <span class="menu-title">Access Environment</span>
             </a>
           </li>
           <li class="nav-item nav-category"></li>
@@ -183,6 +177,7 @@
   @if (str_contains(Route::currentRouteName(),'.index') || str_contains(Route::currentRouteName(),'.catalog'))
     <script>
         let table = new DataTable('#dt', {});
+        let table1 = new DataTable('#dt1', {});
     </script>
   @endif
 

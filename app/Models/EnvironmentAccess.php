@@ -10,11 +10,12 @@ class EnvironmentAccess extends Model
 {
     use HasFactory;
 
+    protected $table = 'environment_access';
+
     protected $fillable = [
         'environment_id',
         'user_id',
-        'address',
-        'access_port',
+        'description',
         'last_access'
     ];
     

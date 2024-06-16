@@ -56,6 +56,7 @@
           <label class="col-sm-3 col-form-label">Tags</label>
           <div class="col-sm-12">
             <input type="text" name="tags" class="form-control @error('tags') is-invalid @enderror" value="{{ isset($definition['tags']) ? $definition['tags']  : '' }}" placeholder="Tags">
+            <small class="form-text text-muted">Must be separated by commas (i.e.: owasp,sql injection)</small>
             @error('tags')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
