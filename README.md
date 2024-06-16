@@ -55,17 +55,17 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
       - [x] Delete
       - [x] Add other professors definitions to themselves
     - Environments
-      - [ ] Create
-      - [ ] Read
-      - [ ] History
+      - [x] Create
+      - [x] Read
+      - [x] History
       - [ ] Update (?)
-      - [ ] Delete
+      - [x] Delete
     - Environments Access
-      - [ ] Read
-      - [ ] History
+      - [x] Read
+      - [x] History
   - Trainees
       - Environments Access
-        - [ ] Access
+        - [x] Access
         - [ ] History
         - [ ] Read
 
