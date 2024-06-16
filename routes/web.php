@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefinitionController;
 use App\Http\Controllers\EnvironmentController;
 use App\Http\Controllers\UserController;
@@ -23,10 +24,10 @@ Route::controller(EnvironmentController::class)->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/Dashboard', function () {
-        return view('dashboard.index');
-    })->name('Dashboard');
 
+    Route::controller(DashboardController::class)->group(function () {
+        Route::get('/Dashboard','index')->name("Dashboard");
+    });
     Route::controller(AuthController::class)->group(function () {
         Route::get('/Logout','logout')->name("Auth.logout");
     });
@@ -63,5 +64,9 @@ Route::middleware('auth')->group(function () {
 
     Route::controller(EnvironmentController::class)->group(function () {
         Route::resource('/Environments',EnvironmentController::class);
+        Route::post('/JoinEnvironment/{id}','join')->name("Environments.join");
+        Route::get('/JoinEnvironment/{id}','joinShow')->name("Environments.joinShow");
+        Route::get('/EnvironmentAccessSelection/{id}','access')->name("Environments.access");
+        Route::get('/EnvironmentAccess/{id}','userAccess')->name("Environments.userAccess");
     })->middleware(AdminMiddleware::class);
 });

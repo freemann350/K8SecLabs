@@ -20,18 +20,19 @@
           </thead>
           <tbody>
             @foreach ($environments as $environment)
-            <tr>
-              <td>{{ $environment->name }}</td>
-              <td>{{ $environment->created_at }}</td>
-              <td>{{ $environment->userDefinition->definition->name }}</td>
-              <td>{{ $environment->quantity }} &nbsp;</td>
-              <td>
-                  <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="{{route('Environments.show',$environment->id)}}"><i class="mdi mdi-view-list"></i></a>
-                  <a class="btn btn-outline-dark btn-fw btn-rounded btn-sm" href="{{ route('Environments.edit', $environment->id) }}"><i class="mdi mdi-pencil"></i></a>
-                  <a class="btn btn-outline-danger btn-fw btn-rounded btn-sm" href="#" onclick="_delete('Are you sure you want to delete the environment &quot;{{ $environment->name }}&quot; ({{ $environment->id }})','{{ route("Environments.destroy", $environment->id) }}')"><i class="mdi mdi-trash-can-outline"></i></a>
-                  <a class="btn btn-outline-warning btn-fw btn-rounded btn-sm" href="#" onclick="access_code('{{$environment->access_code}}')"><i class="mdi mdi-key"></i></a>
-              </td>
-            </tr>
+              @if ($environment->end_date == null)              
+              <tr>
+                <td>{{ $environment->name }}</td>
+                <td>{{ $environment->created_at }}</td>
+                <td>{{ $environment->userDefinition->definition->name }}</td>
+                <td>{{ $environment->quantity }} &nbsp;</td>
+                <td>
+                    <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="{{route('Environments.show',$environment->id)}}"><i class="mdi mdi-view-list"></i></a>
+                    <a class="btn btn-outline-danger btn-fw btn-rounded btn-sm" href="#" onclick="_delete('Are you sure you want to end the environment &quot;{{ $environment->name }}&quot; ({{ $environment->id }})','{{ route("Environments.destroy", $environment->id) }}')"><i class="mdi mdi-trash-can-outline"></i></a>
+                    <a class="btn btn-outline-warning btn-fw btn-rounded btn-sm" href="#" onclick="access_code('{{$environment->access_code}}')"><i class="mdi mdi-key"></i></a>
+                </td>
+              </tr>
+              @endif
             @endforeach
           </tbody>
         </table>
@@ -59,15 +60,17 @@
           </thead>
           <tbody>
             @foreach ($environments as $environment)
+            @if ($environment->end_date != null)
             <tr>
               <td>{{ $environment->name }}</td>
-              <td>From: {{ $environment->created_at }} <br> To:{{ isset($environment->end_date) ? $environment->end_date : "N/A" }}</td>
+              <td>From: {{ $environment->created_at }} <br> To:{{ $environment->end_date }}</td>
               <td>{{ $environment->userDefinition->definition->category->name }}</td>
               <td>{{ $environment->quantity }} &nbsp;</td>
               <td>
                   <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="{{route('Environments.show',$environment->id)}}"><i class="mdi mdi-view-list"></i></a>
               </td>
             </tr>
+            @endif
             @endforeach
           </tbody>
         </table>

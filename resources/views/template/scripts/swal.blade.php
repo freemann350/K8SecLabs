@@ -46,7 +46,6 @@
                   @csrf
                   @method('DELETE')
               `;
-              // Append the form to the document body and submit it
               document.body.appendChild(form);
               form.submit();
             }
@@ -64,5 +63,5 @@
             `,
             focusConfirm: true
         });
-      }
+    }
 </script>

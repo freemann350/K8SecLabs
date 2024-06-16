@@ -122,7 +122,7 @@
               </ul>
             </div>
           </li>
-          <li class="nav-item nav-category">Trainees</li>
+          <li class="nav-item nav-category">Training</li>
           <li class="nav-item">
             <a class="nav-link" href="#">
               <i class="menu-icon mdi mdi-book-variant"></i>
