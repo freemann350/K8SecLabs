@@ -1,5 +1,4 @@
 @extends('template.layout')
-
 @section('main-content')
 <div class="col-lg-12 grid-margin stretch-card">
   <div class="card">
@@ -9,7 +8,7 @@
           List of all categories
           </p>
           <div class="table-responsive">
-          <table class="table table-hover table-striped" style="text-align:center" id="dt">
+          <table class="table table-hover table-striped text-center" id="dt">
               <thead>
               <tr>
                   <th>Name</th>

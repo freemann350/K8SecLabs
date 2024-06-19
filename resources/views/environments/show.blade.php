@@ -1,55 +1,35 @@
 @extends('template.layout')
 @section('main-content')
-@foreach ($environments as $key => $environment)
-    <div class="col-md-12 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title"><strong>Environment #{{$key+1}}</strong></h4>
-                <div class="row">
-                    <div class="col-md-6">
-                        <address>
-                            <p class="fw-bold">
-                                Assigned User
-                            </p>
-                            <p class="mb-2">
-                                {{$environment->user_id == null ? "N/A" : $environment->user->name}}
-                            </p>
-                        </address>
-                    </div>
-                    <div class="col-md-6">
-                        <address>
-                            <p class="fw-bold">
-                                Status
-                            </p>
-                            <label class="badge badge-success"><b>Ready</b></label>
-                        </address>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <button class="btn btn-info btn-lg btn-block" onclick="toggleDescription({{$key}})">
-                        Show/Hide Description
-                    </button>
-                    <address id="description-{{$key}}" style="display: none;">
-                        <p class="fw-bold">
-                            Description
-                        </p>
-                        <p class="mb-2 description">
-                            {!! $environment->description !!}
-                        </p>
-                    </address>
-                </div>
-            </div>
-        </div>
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Your Running Environments</h4>
+      <p class="card-description">
+          List of your currently running Environments
+      </p>
+      <div class="table-responsive">
+        <table class="table table-striped text-center" id="dt">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th class="text-center">Assigned User</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($environmentAccesses as $environmentAccess)
+              <tr>
+                <td class="text-center">{{ $environmentAccess->id }}</td>
+                <td class="text-center">{{ isset($environmentAccess->user->name) ? $environmentAccess->user->name : 'N/A'}} {{ isset($environmentAccess->user->type) ? '('.$environmentAccess->user->type.')' : ''}}</td>
+                <td class="text-center">
+                    <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="#" onclick="window.open('{{route('EnvironmentAccesses.show',$environmentAccess->id)}}','Join Environment','width=1024,height=720')"><i class="mdi mdi-view-list"></i></a>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
     </div>
-@endforeach
-<script>
-    function toggleDescription(key) {
-        var description = document.getElementById('description-' + key);
-        if (description.style.display === "none") {
-            description.style.display = "block";
-        } else {
-            description.style.display = "none";
-        }
-    }
-</script>
+  </div>
+</div>
 @endsection

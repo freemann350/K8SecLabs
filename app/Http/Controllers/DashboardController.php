@@ -18,4 +18,12 @@ class DashboardController extends Controller
 
         return  view('dashboard.index', compact('environments'));
     }
+
+    public function join($id)
+    {
+        dd("aaa");
+        $environment = Environment::findOrFail($id);
+
+        return view("dashboard.join", compact("environment"));
+    }
 }

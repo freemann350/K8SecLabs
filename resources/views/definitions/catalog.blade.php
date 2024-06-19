@@ -8,7 +8,7 @@
       <p class="card-description">
           List of all your Definitions
       </p>
-      <table class="table table-striped" style="text-align:center" id="dt">
+      <table class="table table-striped text-center" id="dt">
         <thead>
           <tr>
             <th>Name</th>

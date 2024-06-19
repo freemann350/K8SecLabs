@@ -9,7 +9,7 @@
           List of all your Definitions
       </p>
       <div class="table-responsive">
-        <table class="table table-striped" style="text-align:center" id="dt">
+        <table class="table table-striped text-center" id="dt">
           <thead>
             <tr>
               <th>Name</th>
@@ -46,13 +46,13 @@
           List of all your saved Definitions
       </p>
       <div class="table-responsive">
-        <table class="table table-striped" style="text-align:center" id="dt1">
+        <table class="table table-striped text-center" id="dt1">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Privacy</th>
-              <th>Actions</th>
+              <th class="text-center">Name</th>
+              <th class="text-center">Category</th>
+              <th class="text-center">Privacy</th>
+              <th class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>

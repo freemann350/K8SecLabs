@@ -123,8 +123,8 @@
             </div>
           </li>
           <li class="nav-item nav-category">Training</li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
+          <li class="nav-item {{ str_contains(Route::currentRouteName(),'EnvironmentAccesses.') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route ('EnvironmentAccesses.index') }}">
               <i class="menu-icon mdi mdi-book-variant"></i>
               <span class="menu-title">Environment History</span>
             </a>
@@ -174,7 +174,7 @@
   <script src="{{ url('js/main/jquery.min.js') }}"></script>
   <script src="{{ url('js/main/toastr.min.js') }}"></script>
   <script src="{{ url('js/main/sweetalert2@11.js') }}"></script>
-  @if (str_contains(Route::currentRouteName(),'.index') || str_contains(Route::currentRouteName(),'.catalog'))
+  @if (str_contains(Route::currentRouteName(),'.index') || str_contains(Route::currentRouteName(),'.catalog') || Route::currentRouteName() =='Environments.show')
     <script>
         let table = new DataTable('#dt', {});
         let table1 = new DataTable('#dt1', {});

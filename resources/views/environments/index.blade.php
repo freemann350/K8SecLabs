@@ -8,7 +8,7 @@
           List of your currently running Environments
       </p>
       <div class="table-responsive">
-        <table class="table table-striped" style="text-align:center" id="dt">
+        <table class="table table-striped text-center" id="dt">
           <thead>
             <tr>
               <th>Name</th>
@@ -23,7 +23,7 @@
               @if ($environment->end_date == null)              
               <tr>
                 <td>{{ $environment->name }}</td>
-                <td>{{ $environment->created_at }}</td>
+                <td class="text-center">{{ $environment->created_at }}</td>
                 <td>{{ $environment->userDefinition->definition->name }}</td>
                 <td>{{ $environment->quantity }} &nbsp;</td>
                 <td>
@@ -48,14 +48,14 @@
           List of all your past Environments
       </p>
       <div class="table-responsive">
-        <table class="table table-striped" style="text-align:center" id="dt1">
+        <table class="table table-striped text-center" id="dt1">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Runtime</th>
-              <th>Definition</th>
-              <th>Quantity of scenarios</th>
-              <th>Actions</th>
+              <th class="text-center">Name</th>
+              <th class="text-center">Runtime</th>
+              <th class="text-center">Definition</th>
+              <th class="text-center">Quantity of scenarios</th>
+              <th class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>

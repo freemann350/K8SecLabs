@@ -71,79 +71,9 @@ class EnvironmentController extends Controller
      */
     public function show($id)
     {
-        $environments = EnvironmentAccess::where('environment_id', $id)->get();
-
-        return view('environments.show', compact('environments'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    public function join(AccessCodeRequest $request, $id)
-    {
-        $environment = Environment::findOrFail($id);
-        $formData = $request->validated();
+        $environmentAccesses = EnvironmentAccess::where('environment_id', $id)->get();
         
-        if ($formData['access_code'] == $environment->access_code) {
-            return redirect()->route('Environments.joinShow',$id)->with("check",true);
-        } else {
-            $errormsg['message'] = 'Could not join specified environment: wrong access code';
-            $errormsg['code'] = "401";
-            $errormsg['status'] = "Unauthorized";
-            return redirect()->back()->with('error_msg', $errormsg);
-        }
-    }
-    
-    public function joinShow(Request $request, $id)
-    {
-        if (!session('check'))
-            return redirect()->route('Dashboard');
-        $environment = Environment::findOrFail($id);
-        $environments = EnvironmentAccess::where('environment_id',$environment->id)->get();
-        
-        foreach ($environments as $environment) {
-            if ($environment->user_id == Auth::user()->id) {
-                return view('environments.userAccess',compact('environment'));
-            }
-        }
-        return view('environments.access', compact('environments'));
-    }
-
-    public function access($id)
-    {
-        $environment = EnvironmentAccess::findOrFail($id);
-        
-        if ($environment->user_id == null) {
-            $environment->update([
-                "user_id" => Auth::user()->id
-            ]);
-            return view('environments.userAccess', compact('environment'));
-        } else {
-            $errormsg['message'] = 'A user is already using this environment';
-            $errormsg['code'] = "401";
-            $errormsg['status'] = "Unauthorized";
-            return redirect()->back()->withInput()->with('error_msg', $errormsg)->with("check",true);
-        }
-    }
-
-    public function userAccess($id)
-    {
-        $environment = EnvironmentAccess::findOrFail($id);
-        
-        return view('environments.userAccess',compact('environment'));
+        return view('environments.show', compact('environmentAccesses'));
     }
     
     public function destroy($id)

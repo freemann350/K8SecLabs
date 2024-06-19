@@ -8,7 +8,7 @@
           List of all users
           </p>
           <div class="table-responsive">
-            <table class="table table-hover table-striped" style="text-align:center" id="dt">
+            <table class="table table-hover table-striped text-center" id="dt">
                 <thead>
                 <tr>
                     <th>#</th>

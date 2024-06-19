@@ -3,6 +3,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DefinitionController;
+use App\Http\Controllers\EnvironmentAccessController;
 use App\Http\Controllers\EnvironmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
@@ -63,10 +64,13 @@ Route::middleware('auth')->group(function () {
     })->middleware(AdminMiddleware::class);
 
     Route::controller(EnvironmentController::class)->group(function () {
-        Route::resource('/Environments',EnvironmentController::class);
-        Route::post('/JoinEnvironment/{id}','join')->name("Environments.join");
-        Route::get('/JoinEnvironment/{id}','joinShow')->name("Environments.joinShow");
-        Route::get('/EnvironmentAccessSelection/{id}','access')->name("Environments.access");
-        Route::get('/EnvironmentAccess/{id}','userAccess')->name("Environments.userAccess");
+        Route::resource('/Environments',EnvironmentController::class)->except('edit','update');
     })->middleware(AdminMiddleware::class);
+
+    Route::controller(EnvironmentAccessController::class)->group(function () {
+        Route::resource('/EnvironmentAccesses',EnvironmentAccessController::class)->only('index','show');
+        Route::get('/Join/{id}','code')->name("Join");
+        Route::get('/JoinEnvironment/{id}','code')->name("EnvironmentAccesses.code");
+        Route::post('/JoinEnvironment/{id}','join')->name("EnvironmentAccesses.join");
+    });
 });

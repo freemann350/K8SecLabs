@@ -40,14 +40,14 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 col-form-label">Quantity *</label>
+          <label class="col-sm-3 col-form-label">Scenario quantity *</label>
           <div class="col-sm-12">
             <input type="text" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}" placeholder="3" required>
             @error('quantity')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div>        
+        </div>
         <div class="form-group">
           <label class="col-sm-3 col-form-label">Initial exposed port *</label>
           <div class="col-sm-12">

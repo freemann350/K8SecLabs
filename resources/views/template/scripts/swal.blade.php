@@ -3,10 +3,8 @@
       var logout = document.getElementById("logout");
 
       logout.addEventListener("click", function(event) {
-          // Prevent default link behavior
           event.preventDefault();
 
-          // Execute SweetAlert code
           Swal.fire({
               title: "Are you sure you want to leave?",
               text: "There's more networking to be done",
@@ -38,7 +36,6 @@
             confirmButtonText: "Yes"
         }).then((result) => {
             if (result.isConfirmed) {
-              // Create a form element
               const form = document.createElement('form');
               form.method = 'POST';
               form.action = route;

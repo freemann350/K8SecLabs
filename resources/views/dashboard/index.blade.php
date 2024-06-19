@@ -64,7 +64,7 @@
                                         </description>
                                     </address>
                                     <hr>
-                                    <button class="btn btn-outline-dark btn-lg btn-block" onclick="joinEnvironment({{ $environment['id'] }})">Join environment</button><br>
+                                    <a target="popup" class="btn btn-outline-dark btn-lg btn-block" onclick="window.open('{{ route("Join", $environment['id'])}}','Join Environment','width=1024,height=720')">Join environment</a><br>
                                 </div>
                             </div>
                         </div>
