@@ -14,7 +14,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             Swal.fire({
                 title: 'Enter Access Code',
-                html: '<form id="join-form" method="POST" action="/JoinEnvironment/{{$id}}">' +
+                html: '<form id="join-form" method="POST" action="{{route("EnvironmentAccesses.join",$id)}}">' +
                         '@csrf' +
                         '<input type="text" id="access-code" name="access_code" class="swal2-input" placeholder="Access Code">' +
                         '</form>',

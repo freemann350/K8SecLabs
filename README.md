@@ -66,11 +66,11 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
   - Trainees
       - Environments Access
         - [x] Access
-        - [ ] History
-        - [ ] Read
+        - [x] History
+        - [x] Read
 
   - Extras
-    - [ ] Documentation for definition (Q&A)
     - [ ] Better definition forms
     - [ ] New scenarios
+    - [ ] Documentation for definition (Q&A)
     - [ ] Access Logs

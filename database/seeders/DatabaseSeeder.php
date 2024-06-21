@@ -27,6 +27,13 @@ class DatabaseSeeder extends Seeder
         DB::delete('delete from categories');
         echo ("[OK]\n");
 
+        echo ("DELETING DEFINITIONS DATA...");
+        DB::delete('delete from definitions');
+        if (Storage::exists('definitions')) {
+            Storage::deleteDirectory('definitions');
+        }
+        echo ("[OK]\n");
+
         echo ("-- USERS --\n");
         echo ("Adding user 'Admin User'...");
         DB::table('users')->insert([
@@ -76,10 +83,7 @@ class DatabaseSeeder extends Seeder
         $description = file_get_contents(__DIR__ . '/base_definition_description.txt');
         $definition_file = new File(__DIR__."/base_definition.json");
 
-        if (is_dir(storage_path('app/definitions'))) {
-            rmdir(storage_path('app/definitions'));
-        }
-        mkdir(storage_path('app/definitions'), 0755, true);
+        Storage::createDirectory('definitions');
         
         Storage::putFileAs('definitions', $definition_file,'kali-juice-shop.json');
 
@@ -94,7 +98,23 @@ class DatabaseSeeder extends Seeder
         ]);
         echo ("[OK]\n");
         
+        echo ("ADDING DEFINITION 'owasp-juice-shop-simple'...");
+
+        $description = file_get_contents(__DIR__ . '/base_definition_description.txt');
+        $definition_file = new File(__DIR__."/owasp-juice-box-simple.json");
         
+        Storage::putFileAs('definitions', $definition_file,'owasp-juice-box-simple.json');
+
+        DB::table('definitions')->insert([
+            'name' => 'owasp-juice-box-simple',
+            'user_id' => 1,
+            'category_id' => $webVuln,
+            'path' => "definitions/owasp-juice-box-simple.json",
+            'private' => 0,
+            'description' => $description,
+            'tags' => 'owasp-juice-shop,vulnerability-assessment,web-application-security,ethical-hacking'
+        ]);
+        echo ("[OK]\n");
         echo ("\nSEEDING COMPLETE\n\n");
     }
 }
