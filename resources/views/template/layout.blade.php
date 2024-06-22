@@ -84,6 +84,7 @@
             </a>
           </li>
           @endif
+          @if (Auth::user()->role != "T")
           <li class="nav-item nav-category">Lecturering</li>
           <li class="nav-item {{ str_contains(Route::currentRouteName(),'Categories.') ? 'active' : '' }}">
             <a class="nav-link" data-bs-toggle="collapse" data-bs-toggle="collapse" href="#categories" aria-expanded="false" aria-controls="categories">
@@ -122,6 +123,7 @@
               </ul>
             </div>
           </li>
+          @endif
           <li class="nav-item nav-category">Training</li>
           <li class="nav-item {{ str_contains(Route::currentRouteName(),'EnvironmentAccesses.') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route ('EnvironmentAccesses.index') }}">

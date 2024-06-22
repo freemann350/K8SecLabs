@@ -25,7 +25,6 @@
             <div class="row">
             @if (count($environments) > 0)
             @foreach ($environments as $environment)
-                @if ($environment->user_count != $environment->quantity)
                 <div class="col-md-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-header">
@@ -71,7 +70,6 @@
                         </div>
                     </div>
                 </div>
-                @endif
             @endforeach
             @else
             <h5>There are currently no environments available.</h5>

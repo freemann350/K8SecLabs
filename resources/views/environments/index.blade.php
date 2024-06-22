@@ -28,8 +28,8 @@
                 <td>{{ $environment->quantity }} &nbsp;</td>
                 <td>
                     <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="{{route('Environments.show',$environment->id)}}"><i class="mdi mdi-view-list"></i></a>
-                    <a class="btn btn-outline-danger btn-fw btn-rounded btn-sm" href="#" onclick="_delete('Are you sure you want to end the environment &quot;{{ $environment->name }}&quot; ({{ $environment->id }})','{{ route("Environments.destroy", $environment->id) }}')"><i class="mdi mdi-trash-can-outline"></i></a>
                     <a class="btn btn-outline-warning btn-fw btn-rounded btn-sm" href="#" onclick="access_code('{{$environment->access_code}}')"><i class="mdi mdi-key"></i></a>
+                    <a class="btn btn-outline-danger btn-fw btn-rounded btn-sm" href="#" onclick="_delete('Are you sure you want to stop the environment &quot;{{ $environment->name }}&quot; ({{ $environment->id }})','{{ route("Environments.destroy", $environment->id) }}')"><i class="mdi mdi-stop-circle-outline"></i></a>
                 </td>
               </tr>
               @endif
@@ -68,6 +68,7 @@
               <td>{{ $environment->quantity }} &nbsp;</td>
               <td>
                   <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="{{route('Environments.show',$environment->id)}}"><i class="mdi mdi-view-list"></i></a>
+                  <a class="btn btn-outline-danger btn-fw btn-rounded btn-sm" href="#" onclick="_delete('Are you sure you want to delete the environment &quot;{{ $environment->name }}&quot; ({{ $environment->id }})','{{ route("Environments.destroy", $environment->id) }}')"><i class="mdi mdi-trash-can-outline"></i></a>
               </td>
             </tr>
             @endif

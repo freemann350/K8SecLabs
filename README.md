@@ -70,7 +70,13 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
         - [x] Read
 
   - Extras
-    - [ ] Better definition forms
     - [ ] New scenarios
+    - [ ] Better definition forms
     - [ ] Documentation for definition (Q&A)
     - [ ] Access Logs
+
+  - ToDO (Fixes)
+    - [ ] VERIFY IF ENVIRONMENT IS READY (PODS HAVE IP)
+    - [ ] Custom variables
+    - [ ] Change variables on access description
+    - [ ] When deleting categories/definitions, verify if environments exist

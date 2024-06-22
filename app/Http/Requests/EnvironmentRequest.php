@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\DefinitionBelongsToUser;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EnvironmentRequest extends FormRequest
@@ -30,6 +31,7 @@ class EnvironmentRequest extends FormRequest
             'definition' => [
                 'required',
                 'exists:user_definitions,id',
+                new DefinitionBelongsToUser
             ],
             'access_code' => [
                 'required',

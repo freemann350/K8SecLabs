@@ -28,11 +28,11 @@ class EnvironmentAccessController extends Controller
     public function code($id)
     {
         $environment = Environment::findOrFail($id);
-        $environments = EnvironmentAccess::where('environment_id',$environment->id)->get();
+        $environmentAccesses = EnvironmentAccess::where('environment_id',$environment->id)->get();
         
-        foreach ($environments as $environment) {
-            if ($environment->user_id == Auth::user()->id) {
-                return view('dashboard.show',compact('environment'));
+        foreach ($environmentAccesses as $environmentAccess) {
+            if ($environmentAccess->user_id == Auth::user()->id) {
+                return redirect()->route('EnvironmentAccesses.show',$environmentAccess->id);
             }
         }
 
@@ -46,14 +46,25 @@ class EnvironmentAccessController extends Controller
         
         if ($formData['access_code'] == $environment->access_code) {
             $environmentAccesses = EnvironmentAccess::where("environment_id",$id)->get();
-            foreach ($environmentAccesses as $environmentAccess) {
-                if ($environmentAccess->user_id == null) {
-                    $environmentAccess->update([
-                        'user_id' => Auth::user()->id
-                    ]);
+            $remainingAccesses = $environmentAccesses->where("user_id", null)->count();
 
-                    return redirect()->route('EnvironmentAccesses.show',$environmentAccess->id);
+            if ($remainingAccesses > 0) {
+                foreach ($environmentAccesses as $environmentAccess) {
+                    if ($environmentAccess->user_id == null) {
+                        $environmentAccess->update([
+                            'user_id' => Auth::user()->id
+                        ]);
+                        return redirect()->route('EnvironmentAccesses.show',$environmentAccess->id);
+                    }
+
+                    if ($environmentAccess->user_id == Auth::user()->id)
+                        return redirect()->route('EnvironmentAccesses.show',$environmentAccess->id);
                 }
+            } else {
+                $errormsg['message'] = 'Could not join specified environment: there are no more environments remaining';
+                $errormsg['code'] = "404";
+                $errormsg['status'] = "Not Found";
+                return redirect()->back()->with('error_msg', $errormsg);
             }
         } else {
             $errormsg['message'] = 'Could not join specified environment: wrong access code';

@@ -39,7 +39,7 @@ class DefinitionController extends Controller
     {
         $formData = $request->validated();
 
-        $definitionId = Definition::create([
+        $definition = Definition::create([
             'name' => $formData['name'],
             'user_id' => Auth::user()->id,
             'category_id' => $formData['category'],
@@ -54,8 +54,13 @@ class DefinitionController extends Controller
         $filePath = 'definitions/' . $fileName;
         Storage::put($filePath, file_get_contents($file));
 
-        $definitionId->path = $filePath;
-        $definitionId->save();
+        $definition->path = $filePath;
+        $definition->save();
+
+        UserDefinition::create([
+            'user_id' => Auth::id(),
+            'definition_id' => $definition->id
+        ]);
 
         return redirect()->route('Definitions.index')->with('success-msg', 'Definition created successfully.');
     }
@@ -68,6 +73,7 @@ class DefinitionController extends Controller
         $tags = explode(',', $definition->tags);
         
         $variables = $this->extractVariables($json);
+        $variables = array_unique($variables);
 
         return view('definitions.show', compact('definition', 'json', 'tags', 'variables'));
     }
@@ -124,11 +130,17 @@ class DefinitionController extends Controller
     public function addDefinition($id) 
     {
         //ToDO: VALIDATE IF DEFINITION IS PRIVATE
-        //TODO: DATATABLE 2 ON DEFINITIONS INDEX
         
         $user = Auth::user()->id;
         $definition = Definition::findOrFail($id);
         
+        if ($definition->user_id != Auth::id() && $definition->private == 1) {
+            $errormsg['message'] = 'The definition "'.$definition->name.'" is private';
+            $errormsg['code'] = "403";
+            $errormsg['status'] = "Forbidden";
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
+
         $exists = UserDefinition::where("user_id",$user)->where("definition_id",$definition->id)->exists();
         if ($exists) {
             $errormsg['message'] = 'You already have the Definition "'.$definition->name.'"';
@@ -136,6 +148,7 @@ class DefinitionController extends Controller
             $errormsg['status'] = "Method Not Allowed";
             return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
+
         UserDefinition::create([
             'user_id' => Auth::user()->id,
             'definition_id' => $id,

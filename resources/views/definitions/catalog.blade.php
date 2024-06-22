@@ -19,6 +19,7 @@
         </thead>
         <tbody>
           @foreach ($definitions as $definition)
+          @if (($definition->private == 1 && $definition->user_id == Auth::user()->id) || $definition->private == 0)
           <tr>
             <td>{{ $definition->name }}</td>
             <td>{{ $definition->category->name }}</td>
@@ -29,6 +30,7 @@
                 <a class="btn btn-outline-dark btn-fw btn-rounded btn-sm"  href="{{route('Definitions.download',$definition->id)}}"><i class="mdi mdi-file-download"></i></a>
             </td>
           </tr>
+          @endif
           @endforeach
         </tbody>
       </table>

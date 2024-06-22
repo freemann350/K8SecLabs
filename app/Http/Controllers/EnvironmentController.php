@@ -40,6 +40,14 @@ class EnvironmentController extends Controller
     {
         $userId = Auth::user()->id;
         $user_definitions = UserDefinition::where('user_id', $userId)->get();
+        $definitionCount = $user_definitions->count();
+
+        if ($definitionCount == 0) {
+            $errormsg['code']= '403';
+            $errormsg['status']= 'Forbidden';
+            $errormsg['message']= 'You have no definitions to create start an environment';
+            return redirect()->route("Environments.index")->with('error_msg', $errormsg);
+        }
 
         return view('environments.create', compact('user_definitions'));
     }
@@ -116,11 +124,15 @@ class EnvironmentController extends Controller
     {
         $environment = Environment::findOrFail($id);
 
-        $environment->update([
-            'end_date' => date('Y-m-d H:i:s')
-        ]);
-
-        $this->deleteNamespace($environment);
+        if ($environment->end_date == null) {
+            $environment->update([
+                'end_date' => date('Y-m-d H:i:s')
+            ]);
+    
+            $this->deleteNamespace($environment);
+        } else {
+            $environment->delete();
+        }
 
         return redirect()->route('Environments.index')->with('success-msg', 'Environment ended successfully.');
     }
