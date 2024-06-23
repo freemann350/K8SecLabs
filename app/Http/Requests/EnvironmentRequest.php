@@ -43,15 +43,46 @@ class EnvironmentRequest extends FormRequest
                 'integer',
                 'min:1',
             ],
+            'port' => [
+                'required',
+                'integer',
+                'between:30000,32767',
+            ],
             'description' => [
                 'nullable',
                 'string',
                 'max:255',
             ],
-            'port' => [
+
+            //CUSTOM VARIABLES
+            'type.*' => [
                 'required',
-                'integer',
-                'between:30000,32767',
+                'in:string,number,rand,flag',
+            ],
+            'variable.*' => [
+                'required',
+            ],
+            'value' => [
+                'required_if:type.*,string',
+                'required_if:type.*,number',
+                'array'
+            ],
+            'value.*' => [
+                'required_if:type.*,string,number',
+            ],
+            'min' => [
+                'required_if:type.*,rand',
+                'array'
+            ],
+            'min.*' => [
+                'required_if:type.*,rand',
+                'nullable',
+                'numeric'
+            ],
+            'max.*' => [
+                'required_if:type.*,rand',
+                'nullable',
+                'numeric'
             ],
         ];
     }
@@ -79,6 +110,15 @@ class EnvironmentRequest extends FormRequest
             'port.required' => 'The port field is required.',
             'port.integer' => 'The port must be an integer.',
             'port.between' => 'The port must be between 30000 and 32767.',
+
+            'type.*.required' => 'The type field is required.',
+            'type.*.in' => 'The type must be one of the following: string, number, rand, flag.',
+            'variable.*.required' => 'The variable field is required.',
+            'value.*.required_if' => 'The value field is required when the type is string or number.',
+            'min.*.required_if' => 'The Min field is required when the type is Random Number.',
+            'min.*.numeric' => 'The Min field must be a number.',
+            'max.*.required_if' => 'The Max field is required when the type is Random Number.',
+            'max.*.numeric' => 'The Max field must be a number.',
         ];
     }
 }

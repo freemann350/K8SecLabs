@@ -10686,7 +10686,7 @@ progress {
   margin: -0.875rem -1.375rem;
   margin-inline-end: 1.375rem;
   color: #212529;
-  background-color: #efefef;
+  background-color: #e9ecef;
   pointer-events: none;
   border-color: inherit;
   border-style: solid;
@@ -22233,7 +22233,6 @@ code {
 .card .card-title {
   color: #010101;
   margin-bottom: 1.2rem;
-  text-transform: capitalize;
   font-size: 1.125rem;
   font-weight: 600;
 }
@@ -23092,7 +23091,7 @@ code {
 .input-group-prepend .input-group-text {
   border-color: #dee2e6;
   padding: .5rem .75rem;
-  color: #c9c8c8;
+  /*color: #c9c8c8;*/
 }
 
 .form-control, .asColorPicker-input, .dataTables_wrapper select, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--single .select2-search__field, .typeahead,
@@ -30435,6 +30434,14 @@ div.tagsinput span.tag a {
 /*
   REMOVE SWAL2 FROM THIS FILE IF POSSIBLE
 */
+.fix-height {
+  height: 31.5px;
+}
+
+select.fix-height {
+  font-size: 13px;
+}
+
 
 pre {
   white-space: pre;

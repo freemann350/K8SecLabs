@@ -43,10 +43,7 @@ class EnvironmentController extends Controller
         $definitionCount = $user_definitions->count();
 
         if ($definitionCount == 0) {
-            $errormsg['code']= '403';
-            $errormsg['status']= 'Forbidden';
-            $errormsg['message']= 'You have no definitions to create start an environment';
-            return redirect()->route("Environments.index")->with('error_msg', $errormsg);
+            $errormsg = $this->createError('403','Forbidden', 'You have no definitions to create start an environment');
         }
 
         return view('environments.create', compact('user_definitions'));
@@ -60,11 +57,10 @@ class EnvironmentController extends Controller
         //TODO: VERIFY IF USER DEFINITION BELONGS TO LOGGED USER
         //TODO: VERIFY IF ENVIRONMENT IS READY (PODS HAVE IP)
         $formData = $request->validated();
-
+        dd("ok");
         if (Environment::where('name',$formData['name'])->whereNull('end_date')->exists()) {
-            $errormsg['code']= '400';
-            $errormsg['status']= 'Bad Request';
-            $errormsg['message']= 'The name is already under use';
+            $errormsg = $this->createError('400','Bad Request', 'The name is already under use');
+            
             return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
 
@@ -76,38 +72,49 @@ class EnvironmentController extends Controller
             'description' => $formData['description'],
         ]);
         
-        $definitionFile = file_get_contents(storage_path('app/'.$environment->userDefinition->definition->path));
-        $definition = json_decode($definitionFile, true);
+        try {
+            $definitionFile = file_get_contents(storage_path('app/'.$environment->userDefinition->definition->path));
+            $definition = json_decode($definitionFile, true);
+        
+            for ($i=0; $i < $formData['quantity']; $i++) { 
+                $environmentAccess = EnvironmentAccess::create([
+                    'environment_id' => $environment->id,
+                    'user_id' => null,
+                    'description' => $environment->userDefinition->definition->description
+                ]);
 
-        for ($i=0; $i < $formData['quantity']; $i++) { 
-            $environmentAccess = EnvironmentAccess::create([
-                'environment_id' => $environment->id,
-                'user_id' => null,
-                'description' => $environment->userDefinition->definition->description
-            ]);
-
-            $status = $this->createNamespace($environment,$environmentAccess,$i);
-            
-            if ($status != 0) {
-                $environment->delete();
-                $this->deleteNamespace($environment);
-                return redirect()->back()->withInput()->with('error_msg', $status);
-            }
-            
-            foreach ($definition['items'] as $resource) {
-                $namespace = $environment->name .'-' . $environment->id . '-env-' . $i+1;
+                $status = $this->createNamespace($environment,$environmentAccess,$i);
                 
-                $rawData = json_encode($resource);
-                $rawData = str_replace('{*NAMESPACE*}',$namespace,$rawData);
-                $rawData = str_replace('"{*ACCESS_PORT*}"',$formData['port']+$i,$rawData);
-                $status = $this->createResource(json_decode($rawData, true), $namespace);
-
                 if ($status != 0) {
                     $environment->delete();
                     $this->deleteNamespace($environment);
                     return redirect()->back()->withInput()->with('error_msg', $status);
                 }
+                
+                foreach ($definition['items'] as $resource) {
+                    $namespace = $environment->name .'-' . $environment->id . '-env-' . $i+1;
+                    
+                    $rawData = json_encode($resource);
+                    $rawData = str_replace('{*NAMESPACE*}',$namespace,$rawData);
+                    $rawData = str_replace('"{*ACCESS_PORT*}"',$formData['port']+$i,$rawData);
+                    
+                    $status = $this->createResource(json_decode($rawData, true), $namespace);
+
+                    if ($status != 0) {
+                        $environment->delete();
+                        $this->deleteNamespace($environment);
+                        return redirect()->back()->withInput()->with('error_msg', $status);
+                    }
+                }
             }
+        } catch (\Exception $e) {
+            $environment->delete();
+            for ($i=0; $i < $formData['quantity']; $i++) { 
+                $this->deleteNamespace($environment);
+            }
+            $errormsg = $this->createError('500','Internal Server Error', $e->getMessage());
+            
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
 
         return redirect()->route('Environments.show',$environment->id)->with('success-msg', "Namespace '". $formData['name'] ."' was added with success");
@@ -155,16 +162,12 @@ class EnvironmentController extends Controller
             $errormsg = $this->treat_error($e->getResponse()->getBody()->getContents());
             
             if ($errormsg == null) {
-                $errormsg['code']= '500';
-                $errormsg['status']= 'Internal Server Error';
-                $errormsg['message']= $e->getMessage();
+                $errormsg = $this->createError('500','Internal Server Error', $e->getMessage());
             }
 
             return $errormsg;
         } catch (\Exception $e) {
-            $errormsg['code']= '500';
-            $errormsg['status']= 'Internal Server Error';
-            $errormsg['message']= $e->getMessage();
+            $errormsg = $this->createError('500','Internal Server Error', $e->getMessage());
 
             return $errormsg;
         }
@@ -201,16 +204,12 @@ class EnvironmentController extends Controller
             $errormsg = $this->treat_error($e->getResponse()->getBody()->getContents());
             
             if ($errormsg == null) {
-                $errormsg['code']= '500';
-                $errormsg['status']= 'Internal Server Error';
-                $errormsg['message']= $e->getMessage();
+                $errormsg = $this->createError('500','Internal Server Error', $e->getMessage());
             }
 
             return $errormsg;
         } catch (\Exception $e) {
-            $errormsg['code']= '500';
-            $errormsg['status']= 'Internal Server Error';
-            $errormsg['message']= $e->getMessage();
+            $errormsg = $this->createError('500','Internal Server Error', $e->getMessage());
 
             return $errormsg;
         }
@@ -297,6 +296,18 @@ class EnvironmentController extends Controller
                 continue;
             }
         }
+    }
+
+    private function transformVariables($var) {
+
+    }
+
+    private function createError($code, $status, $message) {
+        $errormsg['code']= $code;
+        $errormsg['status']= $status;
+        $errormsg['message']= $message;
+
+        return $errormsg;
     }
 
     private function treat_error($errorMessage) 

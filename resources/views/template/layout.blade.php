@@ -187,6 +187,86 @@
 
   @include('template/scripts/toastr')
 
+  @if (Route::currentRouteName() == 'Environments.create')
+  <script>
+  function appendInput(baseDivName) {
+    const baseDiv = document.getElementById(baseDivName);
+    const baseInput = document.createElement('div');
+    baseInput.classList.add('dynamic-input');
+
+    if (baseDivName === 'variables') {
+      baseInput.innerHTML = `
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Type</span>
+        </div>
+        <select class="form-select fix-height" name="type[]" onchange="handleTypeChange(this)">
+          <option value="string" selected>String</option>
+          <option value="number">Number</option>
+          <option value="rand">Random Number</option>
+          <option value="flag">Flag (empty value creates random sha256 flags)</option>
+        </select>
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Variable</span>
+        </div>
+        <input type="text" class="form-control fix-height" name="variable[]">
+        <div class="input-group-prepend value-label">
+          <span class="input-group-text">Value</span>
+        </div>
+        <input type="text" class="form-control fix-height value-input" name="value[]">
+        <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
+      </div>
+      `;
+    }
+
+    baseDiv.appendChild(baseInput);
+  }
+
+  function handleTypeChange(selectElement) {
+    const parentDiv = selectElement.closest('.dynamic-input');
+    const valueLabel = parentDiv.querySelector('.value-label span');
+    const valueInput = parentDiv.querySelector('.value-input');
+
+    if (selectElement.value === 'rand') {
+      valueLabel.innerText = 'Min';
+      valueInput.name = 'min[]';
+      valueInput.placeholder = 'Min';
+
+      const maxInput = document.createElement('input');
+      maxInput.type = 'text';
+      maxInput.classList.add('form-control', 'fix-height', 'max-input');
+      maxInput.name = 'max[]';
+      maxInput.placeholder = 'Max';
+
+      const maxLabel = document.createElement('div');
+      maxLabel.classList.add('input-group-prepend', 'max-label');
+      maxLabel.innerHTML = '<span class="input-group-text">Max</span>';
+
+      valueInput.insertAdjacentElement('afterend', maxInput);
+      valueInput.insertAdjacentElement('afterend', maxLabel);
+    } else {
+      valueLabel.innerText = 'Value';
+      valueInput.name = 'value[]';
+      valueInput.placeholder = '';
+
+      const maxLabel = parentDiv.querySelector('.max-label');
+      const maxInput = parentDiv.querySelector('.max-input');
+
+      if (maxLabel) maxLabel.remove();
+      if (maxInput) maxInput.remove();
+    }
+  }
+
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('removeInput')) {
+      event.target.closest('.dynamic-input').remove();
+    }
+  });
+</script>
+  @endif
+
   @if (isset($json))
       @include('template/scripts/prettyJson')
   @endif
