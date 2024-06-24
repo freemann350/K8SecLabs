@@ -13,7 +13,9 @@ class DashboardController extends Controller
         $environments = Environment::where('end_date', null)
         ->withCount(['environmentAccesses as user_count' => function($query) {
             $query->select(DB::raw('count(user_id)'));
-        }])->get();
+        }])->get()->filter(function ($environment) {
+            return $environment->user_count < $environment->quantity;
+        });
 
         return  view('dashboard.index', compact('environments'));
     }

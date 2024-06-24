@@ -93,7 +93,7 @@
             </a>
             <div class="collapse {{ str_contains(Route::currentRouteName(),'Categories.') ? 'show' : '' }}" id="categories">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{{ route ('Categories.index') }}">List of Categories</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{ route ('Categories.index') }}">Category List</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{ route ('Categories.create') }}">New Category</a></li>
               </ul>
             </div>
@@ -188,88 +188,7 @@
   @include('template/scripts/toastr')
 
   @if (Route::currentRouteName() == 'Environments.create')
-  <script>
-  function appendInput(baseDivName) {
-    const baseDiv = document.getElementById(baseDivName);
-    const baseInput = document.createElement('div');
-    baseInput.classList.add('dynamic-input');
-
-    if (baseDivName === 'string') {
-      baseInput.innerHTML = `
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text">String var name</span>
-        </div>
-        <input type="text" class="form-control fix-height" name="str_name[]">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Value</span>
-        </div>
-        <input type="text" class="form-control fix-height" name="str_val[]">
-        <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
-      </div>
-      `;
-    }
-    
-    if (baseDivName === 'number') {
-      baseInput.innerHTML = `
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Number var name</span>
-        </div>
-        <input type="text" class="form-control fix-height" name="num_name[]">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Value</span>
-        </div>
-        <input type="text" class="form-control fix-height" name="num_val[]">
-        <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
-      </div>
-      `;
-    }
-
-    if (baseDivName === 'random') {
-      baseInput.innerHTML = `
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Rand. var name</span>
-        </div>
-        <input type="text" class="form-control fix-height" name="rand_name[]">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Min</span>
-        </div>
-        <input type="text" class="form-control fix-height" name="min[]">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Max</span>
-        </div>
-        <input type="text" class="form-control fix-height" name="max[]">
-        <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
-      </div>
-      `;
-    }
-
-    if (baseDivName === 'flag') {
-      baseInput.innerHTML = `
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Flag var name</span>
-        </div>
-        <input type="text" class="form-control fix-height" name="flag_name[]">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Value</span>
-        </div>
-        <input type="text" class="form-control fix-height" name="flag_val[]" placeholder="Empty value creates a random sha256 flag (different each environment)">
-        <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
-      </div>
-      `;
-    }
-    baseDiv.appendChild(baseInput);
-  }
-
-  document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('removeInput')) {
-      event.target.closest('.dynamic-input').remove();
-    }
-  });
-</script>
+    @include('template/scripts/newVariable')
   @endif
 
   @if (isset($json))

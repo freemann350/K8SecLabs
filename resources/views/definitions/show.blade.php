@@ -11,10 +11,22 @@
                 <div class="col-md-4">
                     <address>
                         <h4 class="card-title">Main Info</h4>
-                        <p class="mb-2"><b><u>Name:</u></b> {{$definition->name}}</p>
-                        <p class="mb-2"><b><u>Created by:</u></b> {{ $definition->user->name }}</p>
-                        <p class="mb-2"><b><u>Category:</u></b> {{ $definition->category->name }}</p>
-                        <p class="mb-2"><b><u>Visibility:</u></b> {{ $definition->private == 0 ? 'Public' : 'Private' }}</p>
+                        <p class="fw-bold">
+                            Name:
+                        </p>
+                        <p class="mb-2">{{$definition->name}}</p>
+                        <p class="fw-bold">
+                            Created by:
+                        </p>
+                        <p class="mb-2">{{ $definition->user->name }}</p>
+                        <p class="fw-bold">
+                            Category:
+                        </p>
+                        <p class="mb-2">{{ $definition->category->name }}</p>
+                        <p class="fw-bold">
+                            Visibility:
+                        </p>
+                        <p class="mb-2">{{ $definition->private == 0 ? 'Public' : 'Private' }}</p>
                     </address>
                 </div>
                 <div class="col-md-4">

@@ -17,18 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        
-        echo ("-- DELETING EXISTING DATA --\n");
-        echo ("DELETING USER DATA...");
-        DB::delete('delete from users');
-        echo ("[OK]\n");
-
-        echo ("DELETING CATEGORY DATA...");
-        DB::delete('delete from categories');
-        echo ("[OK]\n");
-
         echo ("DELETING DEFINITIONS DATA...");
-        DB::delete('delete from definitions');
         if (Storage::exists('definitions')) {
             Storage::deleteDirectory('definitions');
         }
@@ -80,8 +69,8 @@ class DatabaseSeeder extends Seeder
         echo ("-- DEFINITIONS --\n");
         echo ("ADDING DEFINITION 'kali-juice-shop'...");
 
-        $description = file_get_contents(__DIR__ . '/base_definition_description.txt');
-        $definition_file = new File(__DIR__."/base_definition.json");
+        $description = file_get_contents(__DIR__ . '/definitions/kali-juice-shop_description.txt');
+        $definition_file = new File(__DIR__ . "/definitions/kali-juice-shop.json");
 
         Storage::createDirectory('definitions');
         
@@ -100,19 +89,37 @@ class DatabaseSeeder extends Seeder
         
         echo ("ADDING DEFINITION 'owasp-juice-shop-simple'...");
 
-        $description = file_get_contents(__DIR__ . '/base_definition_description.txt');
-        $definition_file = new File(__DIR__."/owasp-juice-box-simple.json");
+        $description = file_get_contents(__DIR__ . '/definitions/owasp-juice-shop_description.txt');
+        $definition_file = new File(__DIR__ . "/definitions/owasp-juice-shop.json");
         
-        Storage::putFileAs('definitions', $definition_file,'owasp-juice-box-simple.json');
+        Storage::putFileAs('definitions', $definition_file,'owasp-juice-shop.json');
 
         DB::table('definitions')->insert([
-            'name' => 'owasp-juice-box-simple',
+            'name' => 'owasp-juice-shop',
             'user_id' => 1,
             'category_id' => $webVuln,
-            'path' => "definitions/owasp-juice-box-simple.json",
+            'path' => "definitions/owasp-juice-shop.json",
             'private' => 0,
             'description' => $description,
             'tags' => 'owasp-juice-shop,vulnerability-assessment,web-application-security,ethical-hacking'
+        ]);
+        echo ("[OK]\n");
+
+        echo ("ADDING DEFINITION 'flask-ctf'...");
+
+        $description = file_get_contents(__DIR__ . '/definitions/flask-ctf_description.txt');
+        $definition_file = new File(__DIR__ . "/definitions/flask-ctf.json");
+        
+        Storage::putFileAs('definitions', $definition_file,'flask-ctf.json');
+
+        DB::table('definitions')->insert([
+            'name' => 'flask-ctf',
+            'user_id' => 2,
+            'category_id' => $webVuln,
+            'path' => "definitions/flask-ctf.json",
+            'private' => 0,
+            'description' => $description,
+            'tags' => 'flask-app,ctf,web-vulnerabilities'
         ]);
         echo ("[OK]\n");
         echo ("\nSEEDING COMPLETE\n\n");

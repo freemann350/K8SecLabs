@@ -54,7 +54,6 @@ class EnvironmentController extends Controller
      */
     public function store(EnvironmentRequest $request)
     {
-        //TODO: VERIFY IF USER DEFINITION BELONGS TO LOGGED USER
         //TODO: VERIFY IF ENVIRONMENT IS READY (PODS HAVE IP)
         
         $formData = $request->validated();
@@ -78,31 +77,45 @@ class EnvironmentController extends Controller
             $definition = json_decode($definitionFile, true);
 
             for ($i=0; $i < $formData['quantity']; $i++) { 
+                $port = $formData['port']+$i;
+                
+                $description = $environment->userDefinition->definition->description;
+                $description = str_replace('{*ENDPOINT*}','http://'. env('MASTER_NODE_IP_ACCESS') .':'. $port,$description);
+                
                 $environmentAccess = EnvironmentAccess::create([
                     'environment_id' => $environment->id,
                     'user_id' => null,
-                    'description' => $environment->userDefinition->definition->description
+                    'description' => $description
                 ]);
 
-                /*$status = $this->createNamespace($environment,$environmentAccess,$i);
+                $status = $this->createNamespace($environment,$environmentAccess,$i);
                 
                 if ($status != 0) {
                     $environment->delete();
                     $this->deleteNamespace($environment);
                     return redirect()->back()->withInput()->with('error_msg', $status);
-                }*/
+                }
                 
                 foreach ($definition['items'] as $resource) {
                     $namespace = $environment->name .'-' . $environment->id . '-env-' . $i+1;
                     
                     $rawData = json_encode($resource);
                     $rawData = str_replace('{*NAMESPACE*}',$namespace,$rawData);
-                    $rawData = str_replace('"{*ACCESS_PORT*}"',$formData['port']+$i,$rawData);
+                    $rawData = str_replace('"{*ACCESS_PORT*}"',$port,$rawData);
                     
                     $rawData = $this->transformVariables($rawData, $formData);
-                    $environment->delete();
-                    $environmentAccess->delete();
 
+                    if (isset($rawData['not_ok']) && $rawData['not_ok'] == true) {
+                        $environment->delete();
+                        unset($rawData['not_ok']);
+                        $variablesDetected = implode(', ', $rawData);
+                        
+                        $this->deleteNamespace($environment);
+
+                        $errormsg = $this->createError('500','Internal Server Error', "There are variables yet not treated. Untreated variables: $variablesDetected");
+                        return redirect()->back()->withInput()->with('error_msg', $errormsg);
+                    }
+                    
                     $status = $this->createResource(json_decode($rawData, true), $namespace);
 
                     if ($status != 0) {
@@ -110,6 +123,7 @@ class EnvironmentController extends Controller
                         $this->deleteNamespace($environment);
                         return redirect()->back()->withInput()->with('error_msg', $status);
                     }
+                    
                 }
             }
         } catch (\Exception $e) {
@@ -158,6 +172,7 @@ class EnvironmentController extends Controller
                     'Accept' => 'application/json',
                 ],
                 'body' => json_encode($resource),
+                'timeout' => 5,
                 'verify' => false
             ]);
 
@@ -200,6 +215,7 @@ class EnvironmentController extends Controller
                     'Accept' => 'application/json',
                 ],
                 'body' => $jsonData,
+                'timeout' => 5,
                 'verify' => false
             ]);
 
@@ -293,6 +309,7 @@ class EnvironmentController extends Controller
                     'headers' => [
                         'Authorization' => $this->token,
                     ],
+                    'timeout' => 5,
                     'verify' => false
                 ]);
 
@@ -337,6 +354,12 @@ class EnvironmentController extends Controller
             }
         }
 
+        $detectedVariables = [];
+        if (preg_match_all('/\{\*(.*?)\*\}/', $definition, $matches)) {
+            $detectedVariables = $matches[1];
+            $detectedVariables['not_ok'] = true;
+            return $detectedVariables;
+        }
         return $definition;
     }
 

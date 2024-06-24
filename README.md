@@ -73,9 +73,8 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
     - [ ] New scenarios
     - [ ] Better definition forms
     - [ ] Documentation for definition (Q&A)
-    - [ ] Access Logs
 
   - ToDO (Fixes)
-    - [ ] VERIFY IF ENVIRONMENT IS READY (PODS HAVE IP)
+    - [ ] Verify if environment is ready (Pods have IP)
     - [ ] Change variables on access description
     - [ ] When deleting categories/definitions, verify if environments exist

@@ -24,7 +24,11 @@ class DefinitionController extends Controller
 
     public function catalog()
     {
-        $definitions = Definition::all();
+        $userId = Auth::id();
+        $definitions = Definition::whereDoesntHave('userDefinitions', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->get();
+
         return view('definitions.catalog', compact('definitions'));
     }
 

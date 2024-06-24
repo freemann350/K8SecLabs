@@ -22,6 +22,10 @@ class EnvironmentAccessController extends Controller
     {
         $environmentAccess = EnvironmentAccess::findOrFail($id);
 
+        $environmentAccess->update([
+            'last_access' => date('Y-m-d H:i:s')
+        ]);
+        
         return view('environmentAccesses.show', compact('environmentAccess'));
     }
 
@@ -54,6 +58,7 @@ class EnvironmentAccessController extends Controller
                         $environmentAccess->update([
                             'user_id' => Auth::user()->id
                         ]);
+
                         return redirect()->route('EnvironmentAccesses.show',$environmentAccess->id);
                     }
 

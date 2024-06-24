@@ -63,7 +63,7 @@
             @if ($environment->end_date != null)
             <tr>
               <td>{{ $environment->name }}</td>
-              <td>From: {{ $environment->created_at }} <br> To:{{ $environment->end_date }}</td>
+              <td>From: {{ $environment->created_at }} <br> To: {{ $environment->end_date }}</td>
               <td>{{ $environment->userDefinition->definition->category->name }}</td>
               <td>{{ $environment->quantity }} &nbsp;</td>
               <td>

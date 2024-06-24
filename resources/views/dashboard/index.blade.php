@@ -23,9 +23,15 @@
         </div>
         <div class="card-body">
             <div class="row">
+            @php
+                $i=0
+            @endphp
             @if (count($environments) > 0)
-            @foreach ($environments as $environment)
-                <div class="col-md-12 grid-margin stretch-card">
+            @foreach ($environments as $key => $environment)
+            @php
+                $i++
+            @endphp
+                <div class="col-md-{{count($environments)%2!=0 && $i==count($environments) ? '12' : '6'}} grid-margin stretch-card">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="display-5"><strong>{{$environment['name']}}</strong></h5>
@@ -60,7 +66,7 @@
                                             Description
                                         </p>
                                         <description>
-                                            {!! $environment['description'] !!}
+                                            {!! isset($environment['description']) ? $environment['description'] : 'This environment has no description.'!!}
                                         </description>
                                     </address>
                                     <hr>

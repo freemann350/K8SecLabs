@@ -1,0 +1,36 @@
+<div class="ctf-description">
+  <h2>Welcome to the Capture The Flag (CTF) Challenge!</h2>
+  <p>In this scenario, you'll be diving into a <strong>simple web application</strong> built using Flask. The goal is to find the hidden flag, which is a <strong>SHA256 hash starting with <code>CTF</code>
+    </strong>. </p>
+  <p>Each time you launch this challenge, you will encounter a <strong>randomized</strong> scenario. This means the vulnerabilities and the methods to find the flag will vary, so stay sharp and explore thoroughly! </p>
+  <h3>Key Points to Remember:</h3>
+  <ul>
+    <li>All vulnerabilities are <em>simple</em> and do not require any extra tools. </li>
+    <li>There are 5 possible scenarios, each hiding a flag on a different place.</li>
+  </ul>
+  <h3>How to Start:</h3>
+  <p>Access your website <a href="{*ENDPOINT*}">via this link</a>
+  </p>
+  <p>Once you have access to the application, begin by exploring its features and functionalities. Pay close attention to any unusual elements or hidden parts of the web app.</p>
+  <h3>Resources and References:</h3>
+  <p>Need a refresher on common web vulnerabilities? Check out these resources:
+  <ul>
+    <li>
+      <a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top Ten</a>
+    </li>
+    <li>
+      <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods" target="_blank">MDN Web Docs - HTTP Methods</a>
+    </li>
+    <li>
+      <a href="https://www.w3schools.com/html/html_comments.asp" target="_blank">W3Schools - HTML Comments</a>
+    </li>
+    <li>
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console" target="_blank">MDN Web Docs - JavaScript Console</a>
+    </li>
+    <li>
+      <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Comments" target="_blank">MDN Web Docs - CSS Comments</a>
+    </li>
+  </ul>
+  </p>
+  <h3>Good Luck!</h3>
+</div>

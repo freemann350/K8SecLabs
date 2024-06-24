@@ -1,0 +1,63 @@
+<div class="owasp-description">
+  <h2>Welcome to the OWASP Juice Shop Training Environment!</h2>
+  <p>In this scenario, you'll be exploring and learning about common web vulnerabilities through the <strong>OWASP Juice Shop</strong> application. This application is intentionally vulnerable and is used for educational purposes. </p>
+  <h3>Key Features:</h3>
+  <ul>
+    <li>
+      <strong>Variety of Vulnerabilities:</strong> The Juice Shop includes a wide range of vulnerabilities covering most of the OWASP Top Ten.
+    </li>
+    <li>
+      <strong>Realistic Application:</strong> The environment mimics a real-world e-commerce application, enhancing your practical skills.
+    </li>
+    <li>
+      <strong>Educational Resources:</strong> The application provides hints and explanations to help you learn as you explore.
+    </li>
+  </ul>
+  <h3>Common Vulnerabilities to Explore:</h3>
+  <ul>
+    <li>
+      <strong>SQL Injection:</strong> Try to manipulate database queries through user inputs.
+    </li>
+    <li>
+      <strong>Cross-Site Scripting (XSS):</strong> Inject malicious scripts into web pages viewed by other users.
+    </li>
+    <li>
+      <strong>Cross-Site Request Forgery (CSRF):</strong> Perform unauthorized actions on behalf of other users.
+    </li>
+    <li>
+      <strong>Insecure Direct Object References (IDOR):</strong> Access data or perform actions that should be restricted.
+    </li>
+    <li>
+      <strong>Security Misconfigurations:</strong> Identify and exploit incorrect configurations and settings.
+    </li>
+  </ul>
+  <h3>How to Start:</h3>
+  <p>Access your website <a href="{*ENDPOINT*}">via this link</a>
+  </p>
+  <p>Once you have access to the OWASP Juice Shop application, begin by navigating through its features and functionalities. Pay close attention to any input fields, forms, and URLs that might be vulnerable.</p>
+  <h3>Resources and References:</h3>
+  <p>Need a refresher on common web vulnerabilities? Check out these resources:
+  <ul>
+    <li>
+      <a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top Ten</a>
+    </li>
+    <li>
+      <a href="https://owasp.org/www-project-juice-shop/" target="_blank">OWASP Juice Shop Project</a>
+    </li>
+    <li>
+      <a href="https://portswigger.net/web-security/sql-injection" target="_blank">PortSwigger - SQL Injection</a>
+    </li>
+    <li>
+      <a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank">PortSwigger - Cross-Site Scripting</a>
+    </li>
+    <li>
+      <a href="https://portswigger.net/web-security/csrf" target="_blank">PortSwigger - Cross-Site Request Forgery</a>
+    </li>
+    <li>
+      <a href="https://portswigger.net/web-security/access-control/idor" target="_blank">PortSwigger - Insecure Direct Object References</a>
+    </li>
+  </ul>
+  </p>
+  <h3>Good Luck!</h3>
+  <p>Take your time to explore and understand each vulnerability. The goal is to learn and enhance your skills in identifying and exploiting web application vulnerabilities.</p>
+</div>

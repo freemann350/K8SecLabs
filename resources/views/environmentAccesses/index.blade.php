@@ -14,7 +14,8 @@
               <th>Name</th>
               <th>Creation date</th>
               <th>Definition</th>
-              <th>Quantity of scenarios</th>
+              <th>Created by</th>
+              <th>Last access</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -26,9 +27,10 @@
                 <td class="text-center">{{ $environmentAccess->created_at }}</td>
                 <td>{{ $environmentAccess->environment->userDefinition->definition->name }}</td>
                 <td>{{ $environmentAccess->environment->userDefinition->user->name }} &nbsp;</td>
+                <td class="text-center">{{ isset($environmentAccess->last_access) ? $environmentAccess->last_access : 'N/A' }}</td>
                 <td>
-                    <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  onclick="window.open('{{route('EnvironmentAccesses.show',$environmentAccess->id)}}','Join Environment','width=1024,height=720')"><i class="mdi mdi-view-list"></i></a>
-                </td>
+                    <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="#" onclick="window.open('{{route('EnvironmentAccesses.show',$environmentAccess->id)}}','Show Environment','width=1024,height=720')"><i class="mdi mdi-information-outline"></i></a>
+                    </td>
               </tr>
             @endif
             @endforeach
@@ -49,11 +51,12 @@
         <table class="table table-striped text-center" id="dt1">
           <thead>
             <tr>
-              <th  class="text-center">Name</th>
-              <th  class="text-center">Creation date</th>
-              <th  class="text-center">Definition</th>
-              <th  class="text-center">Quantity of scenarios</th>
-              <th  class="text-center">Actions</th>
+              <th class="text-center">Name</th>
+              <th class="text-center">Runtime</th>
+              <th class="text-center">Definition</th>
+              <th class="text-center">Created By</th>
+              <th class="text-center">Last access</th>
+              <th class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -61,12 +64,13 @@
             @if ($environmentAccess->environment->end_date != null)
             <tr>
                 <td>{{ $environmentAccess->environment->name }}</td>
-                <td class="text-center">{{ $environmentAccess->created_at }}</td>
+                <td>From: {{ $environmentAccess->created_at }} <br> To: {{ $environmentAccess->environment->end_date }}</td>
                 <td>{{ $environmentAccess->environment->userDefinition->definition->name }}</td>
                 <td>{{ $environmentAccess->environment->userDefinition->user->name }} &nbsp;</td>
+                <td class="text-center">{{ isset($environmentAccess->last_access) ? $environmentAccess->last_access : 'N/A' }}</td>
                 <td>
-                    <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="{{route('EnvironmentAccesses.show',$environmentAccess->id)}}"><i class="mdi mdi-view-list"></i></a>
-                </td>
+                    <a class="btn btn-outline-info btn-fw btn-rounded btn-sm"  href="#" onclick="window.open('{{route('EnvironmentAccesses.show',$environmentAccess->id)}}','Show Environment','width=1024,height=720')"><i class="mdi mdi-information-outline"></i></a>
+                    </td>
               </tr>
             @endif
             @endforeach

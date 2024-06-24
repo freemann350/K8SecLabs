@@ -50,19 +50,29 @@
         </div>
         <div class="form-group form-inline">
           <label class="col-sm-12 col-form-label">Variables</label>
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Add new variable
+            </button>
+            <div class="dropdown-menu">
+              <button type="button" class="dropdown-item" onClick="appendInput('string')">String</button>
+              <button type="button"  class="dropdown-item" onClick="appendInput('number')">Number</a>
+              <button type="button"  class="dropdown-item" onClick="appendInput('random')">Random Number</a>
+              <button type="button"  class="dropdown-item" onClick="appendInput('flag')">Flag</a>
+            </div>
+          </div>
           <div class="col-sm-12" id="string">
-            <button type="button" class="btn btn-dark" onClick="appendInput('string')">+ Add String Variable</button>
             @if (old('str_name'))
                 @foreach (old('str_name') as $index => $str)
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 dynamic-input">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">String var name</span>
+                            <span class="input-group-text">String name</span>
                         </div>
                         <input type="text" class="form-control fix-height @error("str_name.$index") is-invalid @enderror" name="str_name[]" value="{{old("str_name.$index")}}">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Value</span>
                         </div>
-                        <input type="text" class="form-control fix-height @error("str_val.$index") is-invalid @enderror" name="str_val[]">
+                        <input type="text" class="form-control fix-height @error("str_val.$index") is-invalid @enderror" name="str_val[]" value="{{old("str_val.$index")}}">
                         <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
                         @error("str_name.$index")
                             <div class="invalid-feedback">
@@ -78,20 +88,18 @@
                 @endforeach
             @endif
           </div>
-          <hr>
           <div class="col-sm-12" id="number">
-            <button type="button" class="btn btn-dark" onClick="appendInput('number')">+ Add Number Variable</button>
             @if (old('num_name'))
                 @foreach (old('num_name') as $index => $num)
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 dynamic-input">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Number var name</span>
+                            <span class="input-group-text">Number name</span>
                         </div>
                         <input type="text" class="form-control fix-height @error("num_name.$index") is-invalid @enderror" name="num_name[]" value="{{old("num_name.$index")}}">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Value</span>
                         </div>
-                        <input type="text" class="form-control fix-height @error("num_val.$index") is-invalid @enderror" name="num_val[]">
+                        <input type="text" class="form-control fix-height @error("num_val.$index") is-invalid @enderror" name="num_val[]" value="{{old("num_val.$index")}}">
                         <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
                         @error("num_name.$index")
                             <div class="invalid-feedback">
@@ -107,24 +115,22 @@
                 @endforeach
             @endif
           </div>
-          <hr>
           <div class="col-sm-12" id="random">
-            <button type="button" class="btn btn-dark" onClick="appendInput('random')">+ Add Random Number Variable</button>
             @if (old('rand_name'))
-                @foreach (old('rand_name') as $index => $flag)
-                    <div class="input-group mb-3">
+                @foreach (old('rand_name') as $index => $rand)
+                    <div class="input-group mb-3 dynamic-input">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Rand var name</span>
+                            <span class="input-group-text">Rand. name</span>
                         </div>
                         <input type="text" class="form-control fix-height @error("rand_name.$index") is-invalid @enderror" name="rand_name[]" value="{{old("rand_name.$index")}}">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Min</span>
                         </div>
-                        <input type="text" class="form-control fix-height @error("min.$index") is-invalid @enderror" name="min[]">
+                        <input type="text" class="form-control fix-height @error("min.$index") is-invalid @enderror" name="min[]" value="{{old("min.$index")}}">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Max</span>
                         </div>
-                        <input type="text" class="form-control fix-height max-input @error("max.$index") is-invalid @enderror" name="max[]">
+                        <input type="text" class="form-control fix-height max-input @error("max.$index") is-invalid @enderror" name="max[]" value="{{old("max.$index")}}">
                         <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
                         @error("rand_name.$index")
                             <div class="invalid-feedback">
@@ -145,20 +151,18 @@
                 @endforeach
             @endif
           </div>
-          <hr>
           <div class="col-sm-12" id="flag">
-            <button type="button" class="btn btn-dark" onClick="appendInput('flag')">+ Add Flag Variable</button>
             @if (old('flag_name'))
                 @foreach (old('flag_name') as $index => $flag)
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 dynamic-input">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">Flag var name</span>
+                            <span class="input-group-text">Flag name</span>
                         </div>
                         <input type="text" class="form-control fix-height @error("flag_name.$index") is-invalid @enderror" name="flag_name[]" value="{{old("flag_name.$index")}}">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Value</span>
                         </div>
-                        <input type="text" class="form-control fix-height @error("flag_val.$index") is-invalid @enderror" name="flag_val[]" placeholder="Empty value creates a random sha256 flag (different each environment)">
+                        <input type="text" class="form-control fix-height @error("flag_val.$index") is-invalid @enderror" name="flag_val[]" value="{{old("flag_val.$index")}}" placeholder="Empty value creates a random sha256 flag (different each environment)">
                         <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
                         @error("flag_name.$index")
                             <div class="invalid-feedback">
@@ -174,7 +178,6 @@
                 @endforeach
             @endif
           </div>
-          <hr>
         </div>
         <div class="form-group">
           <label class="col-sm-3 col-form-label">Initial exposed port *</label>

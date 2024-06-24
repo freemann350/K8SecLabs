@@ -8,9 +8,18 @@
                 <div class="col-md-5">
                     <address>
                         <h4 class="card-title">Main Info</h4>
-                        <p class="mb-2"><b><u>Created by:</u></b> {{ $environmentAccess->environment->userDefinition->user->name }}</p>
-                        <p class="mb-2"><b><u>Category:</u></b> {{ $environmentAccess->environment->userDefinition->definition->category->name }}</p>
-                        <p class="mb-2"><b><u>Created at:</u></b> {{ $environmentAccess->created_at }}</p>
+                        <p class="fw-bold">
+                            Created by:
+                        </p>
+                        <p class="mb-2">{{ $environmentAccess->environment->userDefinition->user->name }}</p>
+                        <p class="fw-bold">
+                            Category:
+                        </p>
+                        <p class="mb-2">{{ $environmentAccess->environment->userDefinition->definition->category->name }}</p>
+                        <p class="fw-bold">
+                            Created at:
+                        </p>
+                        <p class="mb-2">{{ $environmentAccess->created_at }}</p>
                     </address>
                 </div>
                 <div class="col-md-2">

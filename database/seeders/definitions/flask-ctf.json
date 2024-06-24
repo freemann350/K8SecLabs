@@ -1,0 +1,72 @@
+{
+	"items": [
+		{
+			"apiVersion": "apps/v1",
+			"kind": "Deployment",
+			"metadata": {
+				"name": "flask-ctf",
+				"namespace": "{*NAMESPACE*}"
+			},
+			"spec": {
+				"replicas": 1,
+				"selector": {
+					"matchLabels": {
+						"app": "flask-ctf"
+					}
+				},
+				"template": {
+					"metadata": {
+						"labels": {
+							"app": "flask-ctf"
+						}
+					},
+					"spec": {
+						"containers": [
+							{
+								"name": "flask-ctf",
+								"image": "freemann350/simple-flask-ctf",
+								"ports": [
+									{
+										"containerPort": 80
+									}
+								],
+								"env": [
+									{
+										"name": "FLAG",
+										"value": "{*FLAG*}"
+									},
+									{
+										"name": "SCENARIO",
+										"value": "{*SCENARIO*}"
+									}
+								]
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			"apiVersion": "v1",
+			"kind": "Service",
+			"metadata": {
+				"name": "flask-ctf",
+				"namespace": "{*NAMESPACE*}"
+			},
+			"spec": {
+				"selector": {
+					"app": "flask-ctf"
+				},
+				"ports": [
+					{
+						"protocol": "TCP",
+						"port": 80,
+						"targetPort": 80,
+						"nodePort": "{*ACCESS_PORT*}"
+					}
+				],
+				"type": "NodePort"
+			}
+		}
+	]
+}
