@@ -43,7 +43,8 @@ class EnvironmentController extends Controller
         $definitionCount = $user_definitions->count();
 
         if ($definitionCount == 0) {
-            $errormsg = $this->createError('403','Forbidden', 'You have no definitions to create start an environment');
+            $errormsg = $this->createError('403','Forbidden', 'You have no definitions to create an environment');
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
 
         return view('environments.create', compact('user_definitions'));

@@ -25,11 +25,11 @@ class UserDefinition extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id')->withTrashed();
     }
 
     public function definition(): BelongsTo
     {
-        return $this->belongsTo(Definition::class, 'definition_id', 'id');
+        return $this->belongsTo(Definition::class, 'definition_id', 'id')->withTrashed();
     }
 }

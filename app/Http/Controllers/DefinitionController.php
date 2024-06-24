@@ -35,7 +35,14 @@ class DefinitionController extends Controller
     public function create()
     {
         $categories = Category::all();
+        if ($categories->count() == 0) {
+            $errormsg = $this->createError('403','Forbidden', 'There are no categories in order to create a definition');
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
+
         $users = User::all();
+
+
         return view('definitions.create', compact('categories', 'users'));
     }
 
@@ -86,6 +93,12 @@ class DefinitionController extends Controller
     {
         $definition = Definition::findOrfail($id);
         $categories = Category::all();
+        
+        if ($categories->count() == 0) {
+            $errormsg = $this->createError('403','Forbidden', 'There are no categories in order to edit this definition');
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
+
         $users = User::all();
         return view('definitions.edit', compact('definition', 'categories', 'users'));
     }
@@ -139,17 +152,13 @@ class DefinitionController extends Controller
         $definition = Definition::findOrFail($id);
         
         if ($definition->user_id != Auth::id() && $definition->private == 1) {
-            $errormsg['message'] = 'The definition "'.$definition->name.'" is private';
-            $errormsg['code'] = "403";
-            $errormsg['status'] = "Forbidden";
+            $errormsg = $this->createError('403','Forbidden','The definition "'.$definition->name.'" is private');
             return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
 
         $exists = UserDefinition::where("user_id",$user)->where("definition_id",$definition->id)->exists();
         if ($exists) {
-            $errormsg['message'] = 'You already have the Definition "'.$definition->name.'"';
-            $errormsg['code'] = "405";
-            $errormsg['status'] = "Method Not Allowed";
+            $errormsg = $this->createError('405','Method Not Allowed','You already have the Definition "'.$definition->name.'"');
             return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
 
@@ -194,5 +203,13 @@ class DefinitionController extends Controller
     {
         preg_match_all('/\{\*([^\}]*)\*\}/', $jsonString, $matches);
         return $matches[1]; // Return only the captured values
+    }
+
+    private function createError($code, $status, $message) {
+        $errormsg['code']= $code;
+        $errormsg['status']= $status;
+        $errormsg['message']= $message;
+
+        return $errormsg;
     }
 }

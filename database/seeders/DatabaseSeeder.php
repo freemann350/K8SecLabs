@@ -81,7 +81,7 @@ class DatabaseSeeder extends Seeder
             'user_id' => 1,
             'category_id' => $webVuln,
             'path' => "definitions/kali-juice-shop.json",
-            'private' => 0,
+            'private' => 1,
             'description' => $description,
             'tags' => 'owasp-juice-shop,penetration-testing,kali-linux,vulnerability-assessment,web-application-security,ethical-hacking'
         ]);

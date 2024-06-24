@@ -76,5 +76,8 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
 
   - ToDO (Fixes)
     - [ ] Verify if environment is ready (Pods have IP)
+      1. Introduces code
+      2. Verify each environment if status is running
+      3. If not running, returns back (The selected environment is not ready yet. Please wait.)
+      3. If running, variable {\*POD-IPLIST\*} (if set) will be replaced with pod IPs and their names
     - [ ] Change variables on access description
-    - [ ] When deleting categories/definitions, verify if environments exist
