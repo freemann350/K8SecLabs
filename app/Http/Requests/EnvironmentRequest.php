@@ -54,35 +54,42 @@ class EnvironmentRequest extends FormRequest
                 'max:255',
             ],
 
-            //CUSTOM VARIABLES
-            'type.*' => [
+            //STRING VARIABLES
+            'str_name.*' => [
+                'required'
+            ],
+            'str_val.*' => [
+                'required'
+            ],
+
+            //NUMBER VARIABLES
+            'num_name.*' => [
+                'required'
+            ],
+            'num_val.*' => [
                 'required',
-                'in:string,number,rand,flag',
+                'numeric'
             ],
-            'variable.*' => [
-                'required',
-            ],
-            'value' => [
-                'required_if:type.*,string',
-                'required_if:type.*,number',
-                'array'
-            ],
-            'value.*' => [
-                'required_if:type.*,string,number',
-            ],
-            'min' => [
-                'required_if:type.*,rand',
-                'array'
+
+            //RAND VARIABLES
+            'rand_name.*' => [
+                'required'
             ],
             'min.*' => [
-                'required_if:type.*,rand',
-                'nullable',
+                'required',
                 'numeric'
             ],
             'max.*' => [
-                'required_if:type.*,rand',
-                'nullable',
+                'required',
                 'numeric'
+            ],
+
+            //FLAG VARIABLES
+            'flag_name.*' => [
+                'required'
+            ],
+            'flag_val.*' => [
+                'nullable'
             ],
         ];
     }

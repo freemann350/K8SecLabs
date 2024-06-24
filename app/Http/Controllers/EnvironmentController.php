@@ -56,8 +56,9 @@ class EnvironmentController extends Controller
     {
         //TODO: VERIFY IF USER DEFINITION BELONGS TO LOGGED USER
         //TODO: VERIFY IF ENVIRONMENT IS READY (PODS HAVE IP)
+        
         $formData = $request->validated();
-        dd("ok");
+
         if (Environment::where('name',$formData['name'])->whereNull('end_date')->exists()) {
             $errormsg = $this->createError('400','Bad Request', 'The name is already under use');
             
@@ -75,7 +76,7 @@ class EnvironmentController extends Controller
         try {
             $definitionFile = file_get_contents(storage_path('app/'.$environment->userDefinition->definition->path));
             $definition = json_decode($definitionFile, true);
-        
+
             for ($i=0; $i < $formData['quantity']; $i++) { 
                 $environmentAccess = EnvironmentAccess::create([
                     'environment_id' => $environment->id,
@@ -83,13 +84,13 @@ class EnvironmentController extends Controller
                     'description' => $environment->userDefinition->definition->description
                 ]);
 
-                $status = $this->createNamespace($environment,$environmentAccess,$i);
+                /*$status = $this->createNamespace($environment,$environmentAccess,$i);
                 
                 if ($status != 0) {
                     $environment->delete();
                     $this->deleteNamespace($environment);
                     return redirect()->back()->withInput()->with('error_msg', $status);
-                }
+                }*/
                 
                 foreach ($definition['items'] as $resource) {
                     $namespace = $environment->name .'-' . $environment->id . '-env-' . $i+1;
@@ -98,6 +99,10 @@ class EnvironmentController extends Controller
                     $rawData = str_replace('{*NAMESPACE*}',$namespace,$rawData);
                     $rawData = str_replace('"{*ACCESS_PORT*}"',$formData['port']+$i,$rawData);
                     
+                    $rawData = $this->transformVariables($rawData, $formData);
+                    $environment->delete();
+                    $environmentAccess->delete();
+
                     $status = $this->createResource(json_decode($rawData, true), $namespace);
 
                     if ($status != 0) {
@@ -117,7 +122,7 @@ class EnvironmentController extends Controller
             return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
 
-        return redirect()->route('Environments.show',$environment->id)->with('success-msg', "Namespace '". $formData['name'] ."' was added with success");
+        return redirect()->route('Environments.show',$environment->id)->with('success-msg', "Environment '". $formData['name'] ."' was added with success");
     }
 
     public function show($id)
@@ -298,8 +303,41 @@ class EnvironmentController extends Controller
         }
     }
 
-    private function transformVariables($var) {
+    private function transformVariables($definition, $data) {
+        unset($data['name']);
+        unset($data['definition']);
+        unset($data['access_code']);
+        unset($data['quantity']);
+        unset($data['port']);
+        unset($data['description']);
 
+        if (isset($data['str_name'])) {
+            foreach ($data['str_name'] as $key => $string) {
+                $definition = str_replace('{*'. $string .'*}',$data['str_val'][$key],$definition);
+            }
+        }
+
+        if (isset($data['num_name'])) {
+            foreach ($data['num_name'] as $key => $num) {
+                $definition = str_replace('"{*'. $num .'*}"',$data['num_val'][$key],$definition);
+            }
+        }
+
+        if (isset($data['rand_name'])) {
+            foreach ($data['rand_name'] as $key => $rand) {
+                $randNumber = rand($data['min'][$key], $data['max'][$key]);
+                $definition = str_replace('{*'. $rand .'*}',$randNumber,$definition);
+            }
+        }
+
+        if (isset($data['flag_name'])) {
+            foreach ($data['flag_name'] as $key => $flag) {
+                $flagVal = isset($data['flag_val'][$key]) && !is_null($data['flag_val'][$key]) ? $data['flag_val'][$key] : hash('sha256',bin2hex(random_bytes(16)));
+                $definition = str_replace('{*'. $flag .'*}',$flagVal,$definition);
+            }
+        }
+
+        return $definition;
     }
 
     private function createError($code, $status, $message) {

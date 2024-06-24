@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('path',50);
             $table->string('description',4000);
             $table->boolean('private');
-            $table->string('checksum',100)->nullable();
             $table->string('tags',200)->nullable();
             $table->timestamps();
             $table->softDeletes();

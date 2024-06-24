@@ -194,69 +194,74 @@
     const baseInput = document.createElement('div');
     baseInput.classList.add('dynamic-input');
 
-    if (baseDivName === 'variables') {
+    if (baseDivName === 'string') {
       baseInput.innerHTML = `
       <div class="input-group mb-3">
         <div class="input-group-prepend">
-          <span class="input-group-text">Type</span>
+          <span class="input-group-text">String var name</span>
         </div>
-        <select class="form-select fix-height" name="type[]" onchange="handleTypeChange(this)">
-          <option value="string" selected>String</option>
-          <option value="number">Number</option>
-          <option value="rand">Random Number</option>
-          <option value="flag">Flag (empty value creates random sha256 flags)</option>
-        </select>
-      </div>
-      <div class="input-group mb-3">
+        <input type="text" class="form-control fix-height" name="str_name[]">
         <div class="input-group-prepend">
-          <span class="input-group-text">Variable</span>
-        </div>
-        <input type="text" class="form-control fix-height" name="variable[]">
-        <div class="input-group-prepend value-label">
           <span class="input-group-text">Value</span>
         </div>
-        <input type="text" class="form-control fix-height value-input" name="value[]">
+        <input type="text" class="form-control fix-height" name="str_val[]">
+        <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
+      </div>
+      `;
+    }
+    
+    if (baseDivName === 'number') {
+      baseInput.innerHTML = `
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Number var name</span>
+        </div>
+        <input type="text" class="form-control fix-height" name="num_name[]">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Value</span>
+        </div>
+        <input type="text" class="form-control fix-height" name="num_val[]">
         <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
       </div>
       `;
     }
 
-    baseDiv.appendChild(baseInput);
-  }
-
-  function handleTypeChange(selectElement) {
-    const parentDiv = selectElement.closest('.dynamic-input');
-    const valueLabel = parentDiv.querySelector('.value-label span');
-    const valueInput = parentDiv.querySelector('.value-input');
-
-    if (selectElement.value === 'rand') {
-      valueLabel.innerText = 'Min';
-      valueInput.name = 'min[]';
-      valueInput.placeholder = 'Min';
-
-      const maxInput = document.createElement('input');
-      maxInput.type = 'text';
-      maxInput.classList.add('form-control', 'fix-height', 'max-input');
-      maxInput.name = 'max[]';
-      maxInput.placeholder = 'Max';
-
-      const maxLabel = document.createElement('div');
-      maxLabel.classList.add('input-group-prepend', 'max-label');
-      maxLabel.innerHTML = '<span class="input-group-text">Max</span>';
-
-      valueInput.insertAdjacentElement('afterend', maxInput);
-      valueInput.insertAdjacentElement('afterend', maxLabel);
-    } else {
-      valueLabel.innerText = 'Value';
-      valueInput.name = 'value[]';
-      valueInput.placeholder = '';
-
-      const maxLabel = parentDiv.querySelector('.max-label');
-      const maxInput = parentDiv.querySelector('.max-input');
-
-      if (maxLabel) maxLabel.remove();
-      if (maxInput) maxInput.remove();
+    if (baseDivName === 'random') {
+      baseInput.innerHTML = `
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Rand. var name</span>
+        </div>
+        <input type="text" class="form-control fix-height" name="rand_name[]">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Min</span>
+        </div>
+        <input type="text" class="form-control fix-height" name="min[]">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Max</span>
+        </div>
+        <input type="text" class="form-control fix-height" name="max[]">
+        <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
+      </div>
+      `;
     }
+
+    if (baseDivName === 'flag') {
+      baseInput.innerHTML = `
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Flag var name</span>
+        </div>
+        <input type="text" class="form-control fix-height" name="flag_name[]">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Value</span>
+        </div>
+        <input type="text" class="form-control fix-height" name="flag_val[]" placeholder="Empty value creates a random sha256 flag (different each environment)">
+        <button type="button" class="btn btn-danger removeInput fix-height"><i class="ti-trash removeInput"></i></button>
+      </div>
+      `;
+    }
+    baseDiv.appendChild(baseInput);
   }
 
   document.addEventListener('click', function(event) {
