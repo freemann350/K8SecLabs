@@ -32,9 +32,12 @@ class EnvironmentAccessController extends Controller
     {
         $environmentAccess = EnvironmentAccess::findOrFail($id);
 
-        $environmentAccess->update([
-            'last_access' => date('Y-m-d H:i:s')
-        ]);
+        if ($environmentAccess->user_id == Auth::id()) {
+            $environmentAccess->update([
+                'last_access' => date('Y-m-d H:i:s')
+            ]);
+        }
+
         preg_match_all('/\{\*ENV_IPS\*\}/', $environmentAccess->description, $matches);
         
         $client = new Client([

@@ -180,15 +180,6 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 col-form-label">Initial exposed port *</label>
-          <div class="col-sm-12">
-            <input type="text" name="port" class="form-control @error('port') is-invalid @enderror" value="{{ old('port') }}" placeholder="30000" required>
-            @error('port')
-              <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-          </div>
-        </div>
-        <div class="form-group">
           <label class="col-sm-3 col-form-label">Description</label>
           <div class="col-sm-12">
             <textarea name="description" class="form-control @error('description') is-invalid @enderror" placeholder="Description">{{ old('description')}}</textarea>

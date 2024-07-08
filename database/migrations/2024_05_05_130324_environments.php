@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name',50);
             $table->foreignId('user_definition_id')->constrained('user_definitions')->onDelete('cascade');
             $table->string('access_code',20);
+            $table->integer('initial_access_port');
             $table->integer('quantity');
             $table->timestamp('end_date')->nullable();
             $table->string('description')->nullable();

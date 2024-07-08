@@ -15,6 +15,7 @@ class Environment extends Model
         'name',
         'user_definition_id',
         'access_code',
+        'initial_access_port',
         'quantity',
         'description',
         'end_date',

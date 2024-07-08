@@ -44,11 +44,6 @@ class EnvironmentRequest extends FormRequest
                 'integer',
                 'min:1',
             ],
-            'port' => [
-                'required',
-                'integer',
-                'between:30000,32767',
-            ],
             'description' => [
                 'nullable',
                 'string',
@@ -116,11 +111,6 @@ class EnvironmentRequest extends FormRequest
             'quantity.required' => 'The quantity field is required.',
             'quantity.integer' => 'The quantity must be an integer.',
             'quantity.min' => 'The quantity must be at least 1.',
-        
-            //PORT
-            'port.required' => 'The port field is required.',
-            'port.integer' => 'The port must be an integer.',
-            'port.between' => 'The port must be between 30000 and 32767.',
 
             //DESCRIPTION
             'description.string' => 'The description must be a string.',

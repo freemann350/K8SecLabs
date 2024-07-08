@@ -11,6 +11,7 @@ use App\Models\UserDefinition;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class EnvironmentController extends Controller
 {
@@ -68,18 +69,28 @@ class EnvironmentController extends Controller
             'user_definition_id' => $formData['definition'],
             'access_code' => $formData['access_code'],
             'quantity' => $formData['quantity'],
+            'initial_access_port' => 0,
             'description' => $formData['description'],
         ]);
         
         try {
             $definitionFile = file_get_contents(storage_path('app/'.$environment->userDefinition->definition->path));
             $definition = json_decode($definitionFile, true);
+            $ports = $this->getAvailablePorts($formData['quantity']);
+
+            if ($ports == -1) {
+                $errormsg = $this->createError('500','Internal Server Error', 'Not enough available ports to allocate');
+            
+                return redirect()->back()->withInput()->with('error_msg', $errormsg);
+            }
+
+            $environment->update([
+                'initial_access_port' => $ports[0]
+            ]);
 
             for ($i=0; $i < $formData['quantity']; $i++) { 
-                $port = $formData['port']+$i;
-                
                 $description = $environment->userDefinition->definition->description;
-                $description = str_replace('{*ENDPOINT*}','http://'. env('MASTER_NODE_IP_ACCESS') .':'. $port,$description);
+                $description = str_replace('{*ENDPOINT*}','http://'. env('MASTER_NODE_IP_ACCESS') .':'. $ports[$i],$description);
                 
                 $environmentAccess = EnvironmentAccess::create([
                     'environment_id' => $environment->id,
@@ -100,7 +111,7 @@ class EnvironmentController extends Controller
                     
                     $rawData = json_encode($resource);
                     $rawData = str_replace('{*NAMESPACE*}',$namespace,$rawData);
-                    $rawData = str_replace('"{*ACCESS_PORT*}"',$port,$rawData);
+                    $rawData = str_replace('"{*ACCESS_PORT*}"',$ports[$i],$rawData);
                     
                     $rawData = $this->transformVariables($rawData, $formData);
 
@@ -364,6 +375,36 @@ class EnvironmentController extends Controller
             return $detectedVariables;
         }
         return $definition;
+    }
+
+    function getAvailablePorts($quantity) {
+        $activeScenarios = Environment::whereNull('end_date')->get();
+    
+        $usedPorts = [];
+        foreach ($activeScenarios as $scenario) {
+            for ($i = 0; $i < $scenario->quantity; $i++) {
+                $usedPorts[] = $scenario->initial_access_port + $i;
+            }
+        }
+    
+        sort($usedPorts);
+    
+        for ($port = 30000; $port <= 32767 - $quantity; $port++) {
+            $blockAvailable = true;
+    
+            for ($i = 0; $i < $quantity; $i++) {
+                if (in_array($port + $i, $usedPorts)) {
+                    $blockAvailable = false;
+                    break;
+                }
+            }
+    
+            if ($blockAvailable) {
+                return range($port, $port + $quantity - 1);
+            }
+        }
+    
+        return -1;
     }
 
     private function createError($code, $status, $message) {
