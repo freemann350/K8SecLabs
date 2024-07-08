@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id('id');
             $table->string('name',50);
             $table->enum('training_type',['R','B','U']);
-            $table->timestamps();
             $table->softDeletes();
         });
     }

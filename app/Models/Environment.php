@@ -23,7 +23,7 @@ class Environment extends Model
     
     public function userDefinition(): BelongsTo
     {
-        return $this->belongsTo(UserDefinition::class, 'user_definition_id', 'id');
+        return $this->belongsTo(UserDefinition::class, 'user_definition_id', 'id')->withTrashed();
     }
 
     public function environmentAccesses(): HasMany

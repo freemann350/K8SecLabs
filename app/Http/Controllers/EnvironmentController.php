@@ -44,7 +44,7 @@ class EnvironmentController extends Controller
 
         if ($definitionCount == 0) {
             $errormsg = $this->createError('403','Forbidden', 'You have no definitions to create an environment');
-            return redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->route("Environments.index")->with('error_msg', $errormsg);
         }
 
         return view('environments.create', compact('user_definitions'));
@@ -55,8 +55,6 @@ class EnvironmentController extends Controller
      */
     public function store(EnvironmentRequest $request)
     {
-        //TODO: VERIFY IF ENVIRONMENT IS READY (PODS HAVE IP)
-        
         $formData = $request->validated();
 
         if (Environment::where('name',$formData['name'])->whereNull('end_date')->exists()) {
@@ -98,7 +96,7 @@ class EnvironmentController extends Controller
                 }
                 
                 foreach ($definition['items'] as $resource) {
-                    $namespace = $environment->name .'-' . $environment->id . '-env-' . $i+1;
+                    $namespace = $environment->name .'-' . $environment->id . '-env-' . $environmentAccess->id;
                     
                     $rawData = json_encode($resource);
                     $rawData = str_replace('{*NAMESPACE*}',$namespace,$rawData);
@@ -144,6 +142,9 @@ class EnvironmentController extends Controller
     {
         $environmentAccesses = EnvironmentAccess::where('environment_id', $id)->get();
         
+        if (count($environmentAccesses) == 0)
+            abort(404);
+
         return view('environments.show', compact('environmentAccesses'));
     }
     
@@ -160,11 +161,11 @@ class EnvironmentController extends Controller
         } else {
             $environment->delete();
         }
-
         return redirect()->route('Environments.index')->with('success-msg', 'Environment ended successfully.');
     }
 
-    private function createResource($resource,$namespace) {
+    private function createResource($resource,$namespace) 
+    {
         try {
             $client = new Client([
                 'base_uri' => $this->endpoint,
@@ -195,11 +196,12 @@ class EnvironmentController extends Controller
         return 0;
     }
     
-    private function createNamespace($environment, $environmentAccess,$scenarioNumber) {
+    private function createNamespace($environment, $environmentAccess,$scenarioNumber) 
+    {
         $namespace = [];
         $namespace['apiVersion'] = "v1";
         $namespace['kind'] = "Namespace";
-        $namespace['metadata']['name'] = $environment->name .'-' . $environment->id . '-env-' . $scenarioNumber+1;
+        $namespace['metadata']['name'] = $environment->name .'-' . $environment->id . '-env-' . $environmentAccess->id;
         $namespace['metadata']['labels']['definition'] = $environment->userDefinition->definition->name;
         $namespace['metadata']['labels']['environment-id'] = ''. $environment->userDefinition->id .'';
         $namespace['metadata']['labels']['environment-access-id'] = ''. $environmentAccess->id .'';
@@ -238,7 +240,8 @@ class EnvironmentController extends Controller
         return 0;
     }
 
-    private function getKubernetesEndpoint($resourceKind, $namespace = null) {
+    private function getKubernetesEndpoint($resourceKind, $namespace = null) 
+    {
         switch ($resourceKind) {
             // Core API (v1)
             case 'Service':
@@ -302,9 +305,13 @@ class EnvironmentController extends Controller
     }
 
     private function deleteNamespace(Environment $environment) {
+        $environmentAccesses = EnvironmentAccess::where('environment_id',$environment->id)->pluck('id');
+        if (count($environmentAccesses) == 0)
+            abort(404);
+
         for ($i=0; $i < $environment->quantity; $i++) { 
             try {
-                $name= $environment->name .'-'. $environment->id .'-env-'. $i+1;
+                $name= $environment->name .'-'. $environment->id .'-env-'. $environmentAccesses[$i];
                 $client = new Client([
                     'base_uri' => $this->endpoint,
                     'headers' => [
@@ -322,12 +329,7 @@ class EnvironmentController extends Controller
     }
 
     private function transformVariables($definition, $data) {
-        unset($data['name']);
-        unset($data['definition']);
-        unset($data['access_code']);
-        unset($data['quantity']);
-        unset($data['port']);
-        unset($data['description']);
+        unset($data['name'],$data['definition'],$data['access_code'],$data['quantity'],$data['port'],$data['description']);
 
         if (isset($data['str_name'])) {
             foreach ($data['str_name'] as $key => $string) {

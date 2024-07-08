@@ -9,7 +9,7 @@
             <p class="card-description">
                 Here you can add add a new user
             </p>
-            <form method="POST" action="{{route('User.store')}}" enctype="multipart/form-data">
+            <form method="POST" action="{{route('Users.store')}}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label class="col-sm-3 col-form-label">Name</label>

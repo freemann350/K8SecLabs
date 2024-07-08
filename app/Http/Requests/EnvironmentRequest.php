@@ -100,6 +100,7 @@ class EnvironmentRequest extends FormRequest
             //NAME
             'name.required' => 'The name field is required.',
             'name.string' => 'The name must be a string.',
+            'name.regex' => 'The name must follow the Kubernetes namespace regex.',
             'name.max' => 'The name may not be greater than 255 characters.',
     
             //DEFINITION

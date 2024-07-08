@@ -15,12 +15,11 @@ return new class extends Migration
             $table->id('id');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->string('name',50);
-            $table->string('path',50);
+            $table->string('name',50)->unique();
+            $table->string('path',70);
             $table->string('description',4000);
             $table->boolean('private');
             $table->string('tags',200)->nullable();
-            $table->timestamps();
             $table->softDeletes();
         });
     }

@@ -60,6 +60,7 @@ class DefinitionController extends Controller
             'tags' => $formData['tags'],
         ]);
 
+        //SAVES THE FILE ON THE LOCAL STORAGE (storage/app/definitions/)
         $file = $formData['definition'];
         $fileName = $formData['name'] . '.json';
         $filePath = 'definitions/' . $fileName;
@@ -68,6 +69,7 @@ class DefinitionController extends Controller
         $definition->path = $filePath;
         $definition->save();
 
+        //ASSOCIATES THE NEWLY CREATED DEFINITION TO THE USER SO THEY CAN USE IT
         UserDefinition::create([
             'user_id' => Auth::id(),
             'definition_id' => $definition->id
@@ -105,6 +107,7 @@ class DefinitionController extends Controller
 
     public function update(UpdateDefinitionInfoRequest $request, $id)
     {
+        //UPDATES THE DEFINITION'S FILENAME BASED ON THE NEW INPUTTED NAME
         $formData = $request->validated();
         $definition = Definition::findOrfail($id);
         $fileName = $formData['name'] . '.json';
@@ -116,11 +119,8 @@ class DefinitionController extends Controller
             'category_id' => $formData['category'],
             'description' => $formData['description'],
             'private' => $formData['private'] == 1 ? 1 : 0,
+            'path' => $filePath,
             'tags' => $formData['tags'],
-        ]);
-        
-        $definition->update([
-            'path' => $filePath
         ]);
 
         return redirect()->route('Definitions.index')->with('success-msg', 'Definition updated successfully.');
@@ -146,8 +146,6 @@ class DefinitionController extends Controller
 
     public function addDefinition($id) 
     {
-        //ToDO: VALIDATE IF DEFINITION IS PRIVATE
-        
         $user = Auth::user()->id;
         $definition = Definition::findOrFail($id);
         
@@ -167,7 +165,7 @@ class DefinitionController extends Controller
             'definition_id' => $id,
         ]);
 
-        return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name.'" added sucessfully updated successfully.');
+        return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name.'" added successfully.');
     }
     public function removeDefinition($id)
     {

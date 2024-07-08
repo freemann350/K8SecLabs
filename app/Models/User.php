@@ -13,6 +13,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
     use SoftDeletes;
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

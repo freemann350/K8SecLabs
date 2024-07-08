@@ -7,9 +7,19 @@ use App\Models\Environment;
 use App\Models\EnvironmentAccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use GuzzleHttp\Client;
 
 class EnvironmentAccessController extends Controller
 {
+    private $endpoint;
+    private $token;
+
+    public function __construct()
+    {
+        $this->endpoint = env('MASTER_NODE_IP','127.0.0.1:6443');
+        $this->token = "Bearer " . env('MASTER_NODE_TOKEN');
+    }
+
     public function index()
     {
         $userId = Auth::user()->id;
@@ -25,8 +35,75 @@ class EnvironmentAccessController extends Controller
         $environmentAccess->update([
             'last_access' => date('Y-m-d H:i:s')
         ]);
+        preg_match_all('/\{\*ENV_IPS\*\}/', $environmentAccess->description, $matches);
         
-        return view('environmentAccesses.show', compact('environmentAccess'));
+        $client = new Client([
+            'base_uri' => $this->endpoint,
+            'headers' => [
+                'Authorization' => $this->token,
+                'Accept' => 'application/json',
+            ],
+            'timeout' => 5,
+            'verify' => false
+        ]);
+
+        $response = $client->get("/api/v1/namespaces/".$environmentAccess->environment->name."-". $environmentAccess->environment->id ."-env-". $environmentAccess->id ."/pods");
+        $jsonData = json_decode($response->getBody(), true);
+
+        $info = [];
+        foreach($jsonData['items'] as $item) {
+            if (isset($item['metadata']['labels']['show-data']) && $item['metadata']['labels']['show-data'] == "false")
+                continue;
+                
+                $data["name"] = $item['metadata']['name'];
+                $data["ip"] = isset($item['status']['podIP']) ? $item['status']['podIP'] : "Not ready";
+                $data["status"] = isset($item['status']['phase']) && $item['status']['phase'] == "Running" ? "Ready" : "Not Ready";
+                array_push($info,$data);
+        }
+
+        $status = "R";
+        foreach ($info as $state) {
+            if ($state['status'] == "Not Ready") {
+                $status = "NR";
+                break;
+            }
+        }
+
+        if (!empty($matches[0])) {
+            $html = "
+            <h3>Environment IPs</h3>
+            <table class=\"table table-striped text-center\" id=\"dt1\">\n
+                <thead>\n
+                    <tr>\n
+                        <th class=\"text-center\">Name</th>\n
+                        <th class=\"text-center\">IP</th>\n
+                        <th class=\"text-center\">Status</th>\n
+                    </tr>\n
+                </thead>\n
+                <tbody>\n
+            ";
+
+            foreach ($info as $data) {
+                $html .= "
+                    <tr>\n
+                    <td>{$data['name']}</td>\n
+                    <td>{$data['ip']}</td>\n";
+                $html .= $data['status'] == "Ready" ? "<td><label class=\"badge badge-success\"> Ready </label></td>\n" : "<td><label class=\"badge badge-danger\"> Not Ready </label></td>\n";
+                $html .= "</tr>\n";
+            }
+
+            $html .= "
+                </tbody>\n
+            </table>
+            ";
+
+            if ($environmentAccess->environment->end_date == null) {
+                $environmentAccess->description = str_replace('{*ENV_IPS*}',$html,$environmentAccess->description);
+            } else {
+                $environmentAccess->description = str_replace('{*ENV_IPS*}','',$environmentAccess->description);
+            }
+        }
+        return view('environmentAccesses.show', compact('environmentAccess','status'));
     }
 
     public function code($id)

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Definition extends Model
 {
     use HasFactory, SoftDeletes;
+    public $timestamps = false;
 
     protected $fillable = [
         'user_id',

@@ -26,7 +26,11 @@
                     <address>
                         <h4 class="card-title">Status</h4>
                         @if ($environmentAccess->environment->end_date == null)
-                        <label class="badge badge-success">Running</label>
+                        @if ($status != 'R')
+                        <label class="badge badge-danger">Not Ready</label>
+                        @else
+                        <label class="badge badge-success">Ready</label>
+                        @endif
                         @else
                         <label class="badge badge-dark">Terminated</label>
                         @endif

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->enum('role',['A','L','T']);
             $table->string('photo',50)->nullable();
             $table->rememberToken();
-            $table->timestamps();
             $table->softDeletes();
         });
 

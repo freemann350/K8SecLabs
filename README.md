@@ -79,5 +79,11 @@ UI Based on my previous project, [MikroKontrol](https://https://github.com/freem
       1. Introduces code
       2. Verify each environment if status is running
       3. If not running, returns back (The selected environment is not ready yet. Please wait.)
-      3. If running, variable {\*POD-IPLIST\*} (if set) will be replaced with pod IPs and their names
-    - [ ] Change variables on access description
+      4. If running, variable {\*POD-IPLIST\*} (if set) will be replaced with pod IPs and their names
+    - [ ] Change variables on access description (AFTER VERIFICATION IF POD IS READY)
+      - [x] Access ({\*ENDPOINT\*})
+      - [ ] IPs ({\*ENDPOINT\*})
+        - [ ] Deployment must have the label `"show-dns": "true"`
+      - [ ] DNS ({\*ENDPOINT\*})
+        - [ ] Service must have the label `"show-dns": "true"`
+      

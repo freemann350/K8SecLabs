@@ -4,8 +4,8 @@
 <div class="col-md-12 grid-margin stretch-card">
   <div class="card">
     <div class="card-body">
-      <h4 class="card-title">Add new Definition</h4>
-      <p class="card-description">Here you can add a new definition</p>
+      <h4 class="card-title">Add new Environment</h4>
+      <p class="card-description">Here you can add a new Environment</p>
       <form method="POST" action="{{ route('Environments.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
@@ -191,7 +191,7 @@
         <div class="form-group">
           <label class="col-sm-3 col-form-label">Description</label>
           <div class="col-sm-12">
-            <textarea name="description" class="form-control @error('description') is-invalid @enderror" placeholder="Description">{{ isset($definition['description']) ? $definition['description']  : '' }}</textarea>
+            <textarea name="description" class="form-control @error('description') is-invalid @enderror" placeholder="Description">{{ old('description')}}</textarea>
             @error('description')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror

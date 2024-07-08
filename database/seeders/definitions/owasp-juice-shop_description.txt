@@ -60,4 +60,5 @@
   </p>
   <h3>Good Luck!</h3>
   <p>Take your time to explore and understand each vulnerability. The goal is to learn and enhance your skills in identifying and exploiting web application vulnerabilities.</p>
+  {*ENV_IPS*}
 </div>
