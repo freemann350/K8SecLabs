@@ -4,57 +4,58 @@
       "apiVersion": "apps/v1",
       "kind": "Deployment",
       "metadata": {
-        "name": "owasp-juice-shop",
+        "name": "alpine-ssh",
         "namespace": "{*NAMESPACE*}"
       },
       "spec": {
         "replicas": 1,
         "selector": {
           "matchLabels": {
-            "app": "owasp-juice-shop"
+            "app": "alpine-ssh"
           }
         },
         "template": {
           "metadata": {
             "labels": {
-              "app": "owasp-juice-shop"
+              "app": "alpine-ssh"
             }
           },
           "spec": {
             "containers": [
               {
-                "name": "owasp-juice-shop",
-                "image": "bkimminich/juice-shop",
+                "name": "alpine-ssh",
+                "image": "woahbase/alpine-ssh:x86_64",
+                "env": [
+                  {
+                    "name": "PGID",
+                    "value": "1000"
+                  },
+                  {
+                    "name": "PUID",
+                    "value": "1000"
+                  },
+                  {
+                    "name": "S6_USER",
+                    "value": "alpine"
+                  },
+                  {
+                    "name": "S6_USERPASS",
+                    "value": "{*CRACKABLE_PASSWORD*}"
+                  },
+                  {
+                    "name": "S6_ROOTPASS",
+                    "value": "extremelyinsecurerootpassword"
+                  }
+                ],
                 "ports": [
                   {
-                    "containerPort": 3000
+                    "containerPort": 22
                   }
                 ]
               }
             ]
           }
         }
-      }
-    },
-    {
-      "apiVersion": "v1",
-      "kind": "Service",
-      "metadata": {
-        "name": "owasp-juice-shop",
-        "namespace": "{*NAMESPACE*}"
-      },
-      "spec": {
-        "selector": {
-          "app": "owasp-juice-shop"
-        },
-        "ports": [
-          {
-            "protocol": "TCP",
-            "port": 80,
-            "targetPort": 3000
-          }
-        ],
-        "type": "ClusterIP"
       }
     },
     {
@@ -90,7 +91,7 @@
                 "env": [
                   {
                     "name": "VNCPWD",
-                    "value": "testing"
+                    "value": "{*VNC_PASSWORD*}"
                   }
                 ]
               }

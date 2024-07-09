@@ -1,89 +1,42 @@
 # K8SecLabs
 
-A Kubernetes and Container based Cyber Range Laravel Control Panel
+A Kubernetes and Container based Cyber Range Laravel Control Panel.
 
 UI Based on my previous project, [MikroKontrol](https://https://github.com/freemann350/MikroKontrol).
-    
+
 ## Architecture
 
 ![Overall architecture](https://github.com/freemann350/K8SecLabs/assets/25934321/3cf72a22-bca6-4a76-82dd-2e328e56ea77)
-![Database](https://github.com/freemann350/K8SecLabs/assets/25934321/ede5e520-8f8d-4947-8538-8d245904b8c6)
+(to be updated)
+
+![Database](https://github.com/freemann350/K8SecLabs/assets/25934321/e6f92795-8c5a-4a64-b679-52af85beb506)
+  
+## Features
+
+- User Management
+- Categories
+- Definition Management
+- Environment creation and deletion
+- Join environments
 
 ## Notes
 
-- Admins can do everything
-- Professors can create definitions and environments
-- Trainees can only join and access environments
+- This is purely an academic project
+- Roles:
+	- Admins can do everything
+	- Lecturers can create definitions and environments
+	- Trainees can only join and access environments
 
-## ToDo
+## Current Scenarios Available
 
-- Revise DB tables and fields
-- Revise Environment Access methods
----
-- Database
-  - [x] Migrations
-  - [x] Seeders
+- [Simple OWASP Juice Shop](https://owasp.org/www-project-juice-shop/)
+- [Kali VNC](https://github.com/freemann350/kali-docker) with OWASP Juice Shop
+- [Simple CTF using Python Flask ](https://github.com/freemann350/simple-flask-ctf)
+- Brute forcing SSH using  [Alpine SSH](https://hub.docker.com/r/woahbase/alpine-ssh/) and [Kali VNC](https://github.com/freemann350/kali-docker)
 
-- Frontend
-  - Common
-    - [x] Login
-    - [ ] Reset password (?)
-    - Edit own information
-      - [x] Common information
-      - [x] Password
-  - Admins
-    - Users
-      - [x] Create
-      - [x] Read
-      - [x] Update (except password)
-      - [x] Delete
-      - [ ] Disallow admin to delete himself
-    - Environments
-      - [ ] Read
-      - [ ] Delete
-  - Professors
-    - Categories
-      - [x] Create
-      - [x] Read
-      - [x] Update
-      - [x] Delete
-    - Definitions
-      - [x] Create
-      - [x] Read
-      - [x] Download
-      - [x] Update
-      - [x] Delete
-      - [x] Add other professors definitions to themselves
-    - Environments
-      - [x] Create
-      - [x] Read
-      - [x] History
-      - [ ] Update (?)
-      - [x] Delete
-    - Environments Access
-      - [x] Read
-      - [x] History
-  - Trainees
-      - Environments Access
-        - [x] Access
-        - [x] History
-        - [x] Read
+Undergoing development:
+- MITM
 
-  - Extras
-    - [ ] New scenarios
-    - [ ] Better definition forms
-    - [ ] Documentation for definition (Q&A)
+## Deployment
 
-  - ToDO (Fixes)
-    - [ ] Verify if environment is ready (Pods have IP)
-      1. Introduces code
-      2. Verify each environment if status is running
-      3. If not running, returns back (The selected environment is not ready yet. Please wait.)
-      4. If running, variable {\*POD-IPLIST\*} (if set) will be replaced with pod IPs and their names
-    - [ ] Change variables on access description (AFTER VERIFICATION IF POD IS READY)
-      - [x] Access ({\*ENDPOINT\*})
-      - [ ] IPs ({\*ENDPOINT\*})
-        - [ ] Deployment must have the label `"show-dns": "true"`
-      - [ ] DNS ({\*ENDPOINT\*})
-        - [ ] Service must have the label `"show-dns": "true"`
-      
+Deployment similar to my previous project, K8Supervisor, [check the deployment guide](https://github.com/freemann350/K8Supervisor?tab=readme-ov-file#deployment-for-testing).

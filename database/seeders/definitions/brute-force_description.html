@@ -1,0 +1,59 @@
+<div>
+  <h2>Welcome to the Brute Force Attack Training Environment!</h2>
+  <p>In this scenario, you'll be exploring and learning about brute force attacks by targeting an SSH service. This environment consists of two main components: an SSH server and a Kali Linux instance with a web-based VNC interface for your attack operations.</p>
+  <h3>Key Features:</h3>
+  <ul>
+    <li>
+      <strong>SSH Server:</strong> The SSH server is configured with a user account that has a crackable password. Your objective is to discover this password through brute force techniques.
+    </li>
+    <li>
+      <strong>Kali Linux Environment:</strong> A Kali Linux container provides a comprehensive set of tools for conducting brute force attacks. Access it via a web-based VNC interface.
+    </li>
+  </ul>
+  <h3>Components:</h3>
+  <ul>
+    <li>
+      <strong>SSH Server:</strong> This machine runs an SSH service with the one of the values of each wordlist: <ul>
+        <li><a href="https://pastebin.com/raw/fW0Gevat" target="_blank">Usernames</a></li>
+        <li><a href="https://pastebin.com/raw/9QPdBXju" target="_blank">Passwords</a></li>
+      </ul>
+    </li>
+    <li>
+      <strong>Kali Web:</strong> This container runs a Kali Linux instance with a web-based VNC interface. Use this interface to launch your brute force attacks and other penetration testing activities.
+    </li>
+  </ul>
+  <h3>How to Start:</h3>
+  <p>Access the Kali Linux environment via the VNC interface <a href="{*ENDPOINT*}/vnc.html" target="_blank">via this link</a>. The VNC password will be provided by the lecturer. </p>
+  <p>Once you have access to the Kali Linux environment, open a terminal and use tools like <a href="https://www.kali.org/tools/hydra/" target="_blank">Hydra</a> or <a href="https://www.kali.org/tools/medusa/" target="_blank">Medusa</a> to start brute forcing the SSH service running. The target SSH  is located within the same network. </p>
+  <h3>Common Tools and Techniques:</h3>
+  <ul>
+    <li>
+      <strong>Hydra:</strong> A parallelized login cracker which supports numerous protocols.
+    </li>
+    <li>
+      <strong>Medusa:</strong> A speedy, parallel, and modular login brute-forcer.
+    </li>
+    <li>
+      <strong>John the Ripper:</strong> Primarily a password cracker, but also supports SSH brute force.
+    </li>
+  </ul>
+  <h3>Resources and References:</h3>
+  <p>Need more information on brute force attacks? Check out these resources:
+  <ul>
+    <li>
+      <a href="https://owasp.org/www-community/attacks/Brute_force_attack" target="_blank">OWASP Brute Force Attack</a>
+    </li>
+    <li>
+      <a href="https://www.kali.org/tools/hydra/" target="_blank">Hydra Documentation</a>
+    </li>
+    <li>
+      <a href="https://www.kali.org/tools/medusa/" target="_blank">Medusa Documentation</a>
+    </li>
+    <li>
+      <a href="https://www.openwall.com/john/" target="_blank">John the Ripper</a>
+    </li>
+  </ul>
+  </p>
+  <h3>Good Luck!</h3>
+  <p>Take your time to explore and understand the brute force techniques. The goal is to learn and enhance your skills in identifying and exploiting authentication mechanisms through brute force attacks.</p> {*ENV_IPS*}
+</div>

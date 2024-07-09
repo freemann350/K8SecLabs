@@ -34,9 +34,6 @@ class EnvironmentController extends Controller
         return view('environments.index', compact('environments'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $userId = Auth::user()->id;
@@ -51,9 +48,6 @@ class EnvironmentController extends Controller
         return view('environments.create', compact('user_definitions'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(EnvironmentRequest $request)
     {
         $formData = $request->validated();
@@ -101,8 +95,8 @@ class EnvironmentController extends Controller
                 $status = $this->createNamespace($environment,$environmentAccess,$i);
                 
                 if ($status != 0) {
-                    $environment->delete();
                     $this->deleteNamespace($environment);
+                    $environment->delete();
                     return redirect()->back()->withInput()->with('error_msg', $status);
                 }
                 
@@ -116,11 +110,11 @@ class EnvironmentController extends Controller
                     $rawData = $this->transformVariables($rawData, $formData);
 
                     if (isset($rawData['not_ok']) && $rawData['not_ok'] == true) {
-                        $environment->delete();
                         unset($rawData['not_ok']);
                         $variablesDetected = implode(', ', $rawData);
                         
                         $this->deleteNamespace($environment);
+                        $environment->delete();
 
                         $errormsg = $this->createError('500','Internal Server Error', "There are variables yet not treated. Untreated variables: $variablesDetected");
                         return redirect()->back()->withInput()->with('error_msg', $errormsg);
@@ -129,8 +123,8 @@ class EnvironmentController extends Controller
                     $status = $this->createResource(json_decode($rawData, true), $namespace);
 
                     if ($status != 0) {
-                        $environment->delete();
                         $this->deleteNamespace($environment);
+                        $environment->delete();
                         return redirect()->back()->withInput()->with('error_msg', $status);
                     }
                     

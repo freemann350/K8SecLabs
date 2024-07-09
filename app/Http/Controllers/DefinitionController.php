@@ -81,6 +81,7 @@ class DefinitionController extends Controller
     public function show($id)
     {
         $definition = Definition::findOrfail($id);
+        $definition->description = str_replace('{*ENV_IPS*}','<code>{*ENV_IPS*}</code>',$definition->description);
 
         $json = Storage::get($definition->path);
         $tags = explode(',', $definition->tags);
