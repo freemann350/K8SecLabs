@@ -11,8 +11,13 @@ class CategoryController extends Controller
 {
     public function index(): View
     {
-        $categories = Category::all();
-        return view('categories.index', ['categories' => $categories]);
+        try {
+            $categories = Category::all();
+            return view('categories.index', ['categories' => $categories]);
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function create()
@@ -22,34 +27,61 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request)
     {
-        $formData = $request->validated();
+        try {
+            $formData = $request->validated();
 
-        Category::create($request->all());
-        return redirect()->route('Categories.index')->with('success', 'Category created successfully.');
+            Category::create($request->all());
+            return redirect()->route('Categories.index')->with('success', 'Category created successfully.');
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function edit($id)
     {
-        $category = Category::find($id);
-        return view('categories.edit', compact('category'));
+        try {
+            $category = Category::findOrFail($id);
+            return view('categories.edit', compact('category'));
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function update(CategoryRequest $request, $id)
     {
-        $formData = $request->validated();  
+        try {
+            $formData = $request->validated();  
 
-        $category = Category::findOrFail($id);
-        $category->update($request->all());
-
-        return redirect()->route('Categories.index')->with('success', 'Category updated successfully.');
+            $category = Category::findOrFail($id);
+            $category->update($request->all());
+    
+            return redirect()->route('Categories.index')->with('success', 'Category updated successfully.');
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
-
 
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
-        $name = $category->name;
-        $category->delete();
-        return redirect()->route('Categories.index')->with('success-msg', "$name was deleted successfully");
+        try {
+            $category = Category::findOrFail($id);
+            $name = $category->name;
+            $category->delete();
+            return redirect()->route('Categories.index')->with('success-msg', "$name was deleted successfully");
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
+    }
+
+    private function createError($code, $status, $message) {
+        $errormsg['code']= $code;
+        $errormsg['status']= $status;
+        $errormsg['message']= $message;
+
+        return $errormsg;
     }
 }

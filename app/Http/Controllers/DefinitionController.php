@@ -17,185 +17,245 @@ class DefinitionController extends Controller
 {
     public function index()
     {
-        $definitions = Definition::where('user_id', Auth::user()->id)->get();
-        $userDefinitions = UserDefinition::where('user_id', Auth::user()->id)->get();
-        return view('definitions.index', compact('definitions','userDefinitions'));
+        try {
+            $definitions = Definition::where('user_id', Auth::user()->id)->get();
+            $userDefinitions = UserDefinition::where('user_id', Auth::user()->id)->get();
+            return view('definitions.index', compact('definitions','userDefinitions'));
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function catalog()
     {
-        $userId = Auth::id();
-        $definitions = Definition::whereDoesntHave('userDefinitions', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->get();
-
-        return view('definitions.catalog', compact('definitions'));
+        try {
+            $userId = Auth::id();
+            $definitions = Definition::whereDoesntHave('userDefinitions', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->get();
+    
+            return view('definitions.catalog', compact('definitions'));
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function create()
     {
-        $categories = Category::all();
-        if ($categories->count() == 0) {
-            $errormsg = $this->createError('403','Forbidden', 'There are no categories in order to create a definition');
-            return redirect()->back()->withInput()->with('error_msg', $errormsg);
+        try {
+            $categories = Category::all();
+            if ($categories->count() == 0) {
+                $errormsg = $this->createError('403','Forbidden', 'There are no categories in order to create a definition');
+                return redirect()->back()->withInput()->with('error_msg', $errormsg);
+            }
+    
+            $users = User::all();
+    
+            return view('definitions.create', compact('categories', 'users'));
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
-
-        $users = User::all();
-
-
-        return view('definitions.create', compact('categories', 'users'));
     }
 
     public function store(DefinitionRequest $request)
     {
-        $formData = $request->validated();
+        try {
+            $formData = $request->validated();
 
-        $definition = Definition::create([
-            'name' => $formData['name'],
-            'user_id' => Auth::user()->id,
-            'category_id' => $formData['category'],
-            'path' => 0,
-            'description' => $formData['description'],
-            'private' => $formData['private'] == 1 ? 1 : 0,
-            'tags' => $formData['tags'],
-        ]);
-
-        //SAVES THE FILE ON THE LOCAL STORAGE (storage/app/definitions/)
-        $file = $formData['definition'];
-        $fileName = $formData['name'] . '.json';
-        $filePath = 'definitions/' . $fileName;
-        Storage::put($filePath, file_get_contents($file));
-
-        $definition->path = $filePath;
-        $definition->save();
-
-        //ASSOCIATES THE NEWLY CREATED DEFINITION TO THE USER SO THEY CAN USE IT
-        UserDefinition::create([
-            'user_id' => Auth::id(),
-            'definition_id' => $definition->id
-        ]);
-
-        return redirect()->route('Definitions.index')->with('success-msg', 'Definition created successfully.');
+            $definition = Definition::create([
+                'name' => $formData['name'],
+                'user_id' => Auth::user()->id,
+                'category_id' => $formData['category'],
+                'path' => 0,
+                'description' => $formData['description'],
+                'private' => $formData['private'] == 1 ? 1 : 0,
+                'tags' => $formData['tags'],
+            ]);
+    
+            //SAVES THE FILE ON THE LOCAL STORAGE (storage/app/definitions/)
+            $file = $formData['definition'];
+            $fileName = $formData['name'] . '.json';
+            $filePath = 'definitions/' . $fileName;
+            Storage::put($filePath, file_get_contents($file));
+    
+            $definition->path = $filePath;
+            $definition->save();
+    
+            //ASSOCIATES THE NEWLY CREATED DEFINITION TO THE USER SO THEY CAN USE IT
+            UserDefinition::create([
+                'user_id' => Auth::id(),
+                'definition_id' => $definition->id
+            ]);
+    
+            return redirect()->route('Definitions.index')->with('success-msg', 'Definition created successfully.');
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function show($id)
     {
-        $definition = Definition::findOrfail($id);
-        $definition->description = str_replace('{*ENV_IPS*}','<code>{*ENV_IPS*}</code>',$definition->description);
-
-        $json = Storage::get($definition->path);
-        $tags = explode(',', $definition->tags);
-        
-        $variables = $this->extractVariables($json);
-        $variables = array_unique($variables);
-
-        return view('definitions.show', compact('definition', 'json', 'tags', 'variables'));
+        try {
+            $definition = Definition::findOrfail($id);
+            $definition->description = str_replace('{*ENV_IPS*}','<code>{*ENV_IPS*}</code>',$definition->description);
+    
+            $json = Storage::get($definition->path);
+            $tags = explode(',', $definition->tags);
+            
+            $variables = $this->extractVariables($json);
+            $variables = array_unique($variables);
+    
+            return view('definitions.show', compact('definition', 'json', 'tags', 'variables'));
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function edit($id)
     {
-        $definition = Definition::findOrfail($id);
-        $categories = Category::all();
-        
-        if ($categories->count() == 0) {
-            $errormsg = $this->createError('403','Forbidden', 'There are no categories in order to edit this definition');
-            return redirect()->back()->withInput()->with('error_msg', $errormsg);
+        try {
+            $definition = Definition::findOrfail($id);
+            $categories = Category::all();
+            
+            if ($categories->count() == 0) {
+                $errormsg = $this->createError('403','Forbidden', 'There are no categories in order to edit this definition');
+                return redirect()->back()->withInput()->with('error_msg', $errormsg);
+            }
+    
+            $users = User::all();
+            return view('definitions.edit', compact('definition', 'categories', 'users'));
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
-
-        $users = User::all();
-        return view('definitions.edit', compact('definition', 'categories', 'users'));
     }
 
     public function update(UpdateDefinitionInfoRequest $request, $id)
     {
-        //UPDATES THE DEFINITION'S FILENAME BASED ON THE NEW INPUTTED NAME
-        $formData = $request->validated();
-        $definition = Definition::findOrfail($id);
-        $fileName = $formData['name'] . '.json';
-        $filePath = 'definitions/' . $fileName;
-        Storage::move($definition->path, $filePath);
+        try {
+            //UPDATES THE DEFINITION'S FILENAME BASED ON THE NEW INPUTTED NAME
+            $formData = $request->validated();
+            $definition = Definition::findOrfail($id);
+            $fileName = $formData['name'] . '.json';
+            $filePath = 'definitions/' . $fileName;
+            Storage::move($definition->path, $filePath);
 
-        $definition->update([
-            'name' => $formData['name'],
-            'category_id' => $formData['category'],
-            'description' => $formData['description'],
-            'private' => $formData['private'] == 1 ? 1 : 0,
-            'path' => $filePath,
-            'tags' => $formData['tags'],
-        ]);
+            $definition->update([
+                'name' => $formData['name'],
+                'category_id' => $formData['category'],
+                'description' => $formData['description'],
+                'private' => $formData['private'] == 1 ? 1 : 0,
+                'path' => $filePath,
+                'tags' => $formData['tags'],
+            ]);
 
-        return redirect()->route('Definitions.index')->with('success-msg', 'Definition updated successfully.');
+            return redirect()->route('Definitions.index')->with('success-msg', 'Definition updated successfully.');
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function updateDefinition(UpdateDefinitionConfigRequest $request, $id)
     {
-        $formData = $request->validated();
+        try {
+            $formData = $request->validated();
 
-        $definition = Definition::findOrfail($id);
-
-        $file = $formData['definition'];
-        $fileName = $definition->name . '.json';
-        $filePath = 'definitions/' . $fileName;
-        Storage::put($filePath, file_get_contents($file));
-        
-        $definition->update([
-            'path' => $filePath
-        ]);
-
-        return redirect()->route('Definitions.index')->with('success-msg', 'Definition updated successfully.');
+            $definition = Definition::findOrfail($id);
+    
+            $file = $formData['definition'];
+            $fileName = $definition->name . '.json';
+            $filePath = 'definitions/' . $fileName;
+            Storage::put($filePath, file_get_contents($file));
+            
+            $definition->update([
+                'path' => $filePath
+            ]);
+    
+            return redirect()->route('Definitions.index')->with('success-msg', 'Definition updated successfully.');
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function addDefinition($id) 
     {
-        $user = Auth::user()->id;
-        $definition = Definition::findOrFail($id);
-        
-        if ($definition->user_id != Auth::id() && $definition->private == 1) {
-            $errormsg = $this->createError('403','Forbidden','The definition "'.$definition->name.'" is private');
-            return redirect()->back()->withInput()->with('error_msg', $errormsg);
+        try {
+            $user = Auth::user()->id;
+            $definition = Definition::findOrFail($id);
+            
+            if ($definition->user_id != Auth::id() && $definition->private == 1) {
+                $errormsg = $this->createError('403','Forbidden','The definition "'.$definition->name.'" is private');
+                return redirect()->back()->withInput()->with('error_msg', $errormsg);
+            }
+    
+            $exists = UserDefinition::where("user_id",$user)->where("definition_id",$definition->id)->exists();
+            if ($exists) {
+                $errormsg = $this->createError('405','Method Not Allowed','You already have the Definition "'.$definition->name.'"');
+                return redirect()->back()->withInput()->with('error_msg', $errormsg);
+            }
+    
+            UserDefinition::create([
+                'user_id' => Auth::user()->id,
+                'definition_id' => $id,
+            ]);
+    
+            return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name.'" added successfully.');
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
-
-        $exists = UserDefinition::where("user_id",$user)->where("definition_id",$definition->id)->exists();
-        if ($exists) {
-            $errormsg = $this->createError('405','Method Not Allowed','You already have the Definition "'.$definition->name.'"');
-            return redirect()->back()->withInput()->with('error_msg', $errormsg);
-        }
-
-        UserDefinition::create([
-            'user_id' => Auth::user()->id,
-            'definition_id' => $id,
-        ]);
-
-        return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name.'" added successfully.');
     }
+
     public function removeDefinition($id)
     {
-        $userDefinition = UserDefinition::findOrFail($id);
-        $definition = Definition::findOrFail($userDefinition->definition_id);
-        
-        $userDefinition->delete();
-
-        return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name .'" was removed from your definitions successfully.');
+        try {
+            $userDefinition = UserDefinition::findOrFail($id);
+            $definition = Definition::findOrFail($userDefinition->definition_id);
+            
+            $userDefinition->delete();
+    
+            return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name .'" was removed from your definitions successfully.');
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function destroy($id)
     {
-        $definition = Definition::findOrFail($id);
+        try {
+            $definition = Definition::findOrFail($id);
         
-        if (Storage::exists($definition->path)) {
-            Storage::delete($definition->path);
+            if (Storage::exists($definition->path)) {
+                Storage::delete($definition->path);
+            }
+    
+            $definition->delete();
+    
+            return redirect()->route('Definitions.index')->with('success-msg', 'Definition deleted successfully.');
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
-
-        $definition->delete();
-
-        return redirect()->route('Definitions.index')->with('success-msg', 'Definition deleted successfully.');
     }
 
     public function download($id)
     {
-        $definition = Definition::findOrFail($id);
-        $filePath = storage_path("app/$definition->path");
-        return response()->download($filePath);
+        try {
+            $definition = Definition::findOrFail($id);
+            $filePath = storage_path("app/$definition->path");
+            return response()->download($filePath);
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     function extractVariables($jsonString)

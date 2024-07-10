@@ -26,147 +26,172 @@ class EnvironmentController extends Controller
     
     public function index()
     {
-        $userId = Auth::user()->id;
-        $environments = Environment::whereHas('userDefinition', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->get();
-
-        return view('environments.index', compact('environments'));
+        try {
+            $userId = Auth::user()->id;
+            $environments = Environment::whereHas('userDefinition', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->get();
+    
+            return view('environments.index', compact('environments'));
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
 
     public function create()
     {
-        $userId = Auth::user()->id;
-        $user_definitions = UserDefinition::where('user_id', $userId)->get();
-        $definitionCount = $user_definitions->count();
-
-        if ($definitionCount == 0) {
-            $errormsg = $this->createError('403','Forbidden', 'You have no definitions to create an environment');
-            return redirect()->route("Environments.index")->with('error_msg', $errormsg);
+        try {
+            $userId = Auth::user()->id;
+            $user_definitions = UserDefinition::where('user_id', $userId)->get();
+            $definitionCount = $user_definitions->count();
+    
+            if ($definitionCount == 0) {
+                $errormsg = $this->createError('403','Forbidden', 'You have no definitions to create an environment');
+                return redirect()->route("Environments.index")->with('error_msg', $errormsg);
+            }
+    
+            return view('environments.create', compact('user_definitions'));
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
-
-        return view('environments.create', compact('user_definitions'));
     }
 
     public function store(EnvironmentRequest $request)
     {
-        $formData = $request->validated();
-
-        if (Environment::where('name',$formData['name'])->whereNull('end_date')->exists()) {
-            $errormsg = $this->createError('400','Bad Request', 'The name is already under use');
-            
-            return redirect()->back()->withInput()->with('error_msg', $errormsg);
-        }
-
-        $environment = Environment::create([
-            'name' => $formData['name'],
-            'user_definition_id' => $formData['definition'],
-            'access_code' => $formData['access_code'],
-            'quantity' => $formData['quantity'],
-            'initial_access_port' => 0,
-            'description' => $formData['description'],
-        ]);
-        
         try {
-            $definitionFile = file_get_contents(storage_path('app/'.$environment->userDefinition->definition->path));
-            $definition = json_decode($definitionFile, true);
-            $ports = $this->getAvailablePorts($formData['quantity']);
+            $formData = $request->validated();
 
-            if ($ports == -1) {
-                $errormsg = $this->createError('500','Internal Server Error', 'Not enough available ports to allocate');
-            
+            if (Environment::where('name',$formData['name'])->whereNull('end_date')->exists()) {
+                $errormsg = $this->createError('400','Bad Request', 'The name is already under use');
+                
                 return redirect()->back()->withInput()->with('error_msg', $errormsg);
             }
-
-            $environment->update([
-                'initial_access_port' => $ports[0]
+    
+            $environment = Environment::create([
+                'name' => $formData['name'],
+                'user_definition_id' => $formData['definition'],
+                'access_code' => $formData['access_code'],
+                'quantity' => $formData['quantity'],
+                'initial_access_port' => 0,
+                'description' => $formData['description'],
             ]);
-
-            for ($i=0; $i < $formData['quantity']; $i++) { 
-                $description = $environment->userDefinition->definition->description;
-                $description = str_replace('{*ENDPOINT*}','http://'. env('MASTER_NODE_IP_ACCESS') .':'. $ports[$i],$description);
+            
+            try {
+                $definitionFile = file_get_contents(storage_path('app/'.$environment->userDefinition->definition->path));
+                $definition = json_decode($definitionFile, true);
+                $ports = $this->getAvailablePorts($formData['quantity']);
+    
+                if ($ports == -1) {
+                    $errormsg = $this->createError('500','Internal Server Error', 'Not enough available ports to allocate');
                 
-                $environmentAccess = EnvironmentAccess::create([
-                    'environment_id' => $environment->id,
-                    'user_id' => null,
-                    'description' => $description
-                ]);
-
-                $status = $this->createNamespace($environment,$environmentAccess,$i);
-                
-                if ($status != 0) {
-                    $this->deleteNamespace($environment);
-                    $environment->delete();
-                    return redirect()->back()->withInput()->with('error_msg', $status);
+                    return redirect()->back()->withInput()->with('error_msg', $errormsg);
                 }
-                
-                foreach ($definition['items'] as $resource) {
-                    $namespace = $environment->name .'-' . $environment->id . '-env-' . $environmentAccess->id;
+    
+                $environment->update([
+                    'initial_access_port' => $ports[0]
+                ]);
+    
+                for ($i=0; $i < $formData['quantity']; $i++) { 
+                    $description = $environment->userDefinition->definition->description;
+                    $description = str_replace('{*ENDPOINT*}','http://'. env('MASTER_NODE_IP_ACCESS') .':'. $ports[$i],$description);
                     
-                    $rawData = json_encode($resource);
-                    $rawData = str_replace('{*NAMESPACE*}',$namespace,$rawData);
-                    $rawData = str_replace('"{*ACCESS_PORT*}"',$ports[$i],$rawData);
+                    $environmentAccess = EnvironmentAccess::create([
+                        'environment_id' => $environment->id,
+                        'user_id' => null,
+                        'description' => $description
+                    ]);
+    
+                    $status = $this->createNamespace($environment,$environmentAccess,$i);
                     
-                    $rawData = $this->transformVariables($rawData, $formData);
-
-                    if (isset($rawData['not_ok']) && $rawData['not_ok'] == true) {
-                        unset($rawData['not_ok']);
-                        $variablesDetected = implode(', ', $rawData);
-                        
-                        $this->deleteNamespace($environment);
-                        $environment->delete();
-
-                        $errormsg = $this->createError('500','Internal Server Error', "There are variables yet not treated. Untreated variables: $variablesDetected");
-                        return redirect()->back()->withInput()->with('error_msg', $errormsg);
-                    }
-                    
-                    $status = $this->createResource(json_decode($rawData, true), $namespace);
-
                     if ($status != 0) {
                         $this->deleteNamespace($environment);
                         $environment->delete();
                         return redirect()->back()->withInput()->with('error_msg', $status);
                     }
                     
+                    foreach ($definition['items'] as $resource) {
+                        $namespace = $environment->name .'-' . $environment->id . '-env-' . $environmentAccess->id;
+                        
+                        $rawData = json_encode($resource);
+                        $rawData = str_replace('{*NAMESPACE*}',$namespace,$rawData);
+                        $rawData = str_replace('"{*ACCESS_PORT*}"',$ports[$i],$rawData);
+                        
+                        $rawData = $this->transformVariables($rawData, $formData);
+    
+                        if (isset($rawData['not_ok']) && $rawData['not_ok'] == true) {
+                            unset($rawData['not_ok']);
+                            $variablesDetected = implode(', ', $rawData);
+                            
+                            $this->deleteNamespace($environment);
+                            $environment->delete();
+    
+                            $errormsg = $this->createError('500','Internal Server Error', "There are variables yet not treated. Untreated variables: $variablesDetected");
+                            return redirect()->back()->withInput()->with('error_msg', $errormsg);
+                        }
+                        
+                        $status = $this->createResource(json_decode($rawData, true), $namespace);
+    
+                        if ($status != 0) {
+                            $this->deleteNamespace($environment);
+                            $environment->delete();
+                            return redirect()->back()->withInput()->with('error_msg', $status);
+                        }
+                        
+                    }
                 }
+            } catch (\Exception $e) {
+                $environment->delete();
+                for ($i=0; $i < $formData['quantity']; $i++) { 
+                    $this->deleteNamespace($environment);
+                }
+                $errormsg = $this->createError('500','Internal Server Error', $e->getMessage());
+                
+                return redirect()->back()->withInput()->with('error_msg', $errormsg);
             }
+    
+            return redirect()->route('Environments.show',$environment->id)->with('success-msg', "Environment '". $formData['name'] ."' was added with success");
         } catch (\Exception $e) {
-            $environment->delete();
-            for ($i=0; $i < $formData['quantity']; $i++) { 
-                $this->deleteNamespace($environment);
-            }
-            $errormsg = $this->createError('500','Internal Server Error', $e->getMessage());
-            
-            return redirect()->back()->withInput()->with('error_msg', $errormsg);
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
-
-        return redirect()->route('Environments.show',$environment->id)->with('success-msg', "Environment '". $formData['name'] ."' was added with success");
     }
 
     public function show($id)
     {
-        $environmentAccesses = EnvironmentAccess::where('environment_id', $id)->get();
+        try {
+            $environmentAccesses = EnvironmentAccess::where('environment_id', $id)->get();
         
-        if (count($environmentAccesses) == 0)
-            abort(404);
-
-        return view('environments.show', compact('environmentAccesses'));
+            if (count($environmentAccesses) == 0)
+                abort(404);
+    
+            return view('environments.show', compact('environmentAccesses'));
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+        }
     }
     
     public function destroy($id)
     {
-        $environment = Environment::findOrFail($id);
+        try {
+            $environment = Environment::findOrFail($id);
 
-        if ($environment->end_date == null) {
-            $environment->update([
-                'end_date' => date('Y-m-d H:i:s')
-            ]);
-    
-            $this->deleteNamespace($environment);
-        } else {
-            $environment->delete();
+            if ($environment->end_date == null) {
+                $environment->update([
+                    'end_date' => date('Y-m-d H:i:s')
+                ]);
+        
+                $this->deleteNamespace($environment);
+            } else {
+                $environment->delete();
+            }
+            return redirect()->route('Environments.index')->with('success-msg', 'Environment ended successfully.');
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
-        return redirect()->route('Environments.index')->with('success-msg', 'Environment ended successfully.');
     }
 
     private function createResource($resource,$namespace) 
@@ -310,26 +335,31 @@ class EnvironmentController extends Controller
     }
 
     private function deleteNamespace(Environment $environment) {
-        $environmentAccesses = EnvironmentAccess::where('environment_id',$environment->id)->pluck('id');
-        if (count($environmentAccesses) == 0)
-            abort(404);
-
-        for ($i=0; $i < $environment->quantity; $i++) { 
-            try {
-                $name= $environment->name .'-'. $environment->id .'-env-'. $environmentAccesses[$i];
-                $client = new Client([
-                    'base_uri' => $this->endpoint,
-                    'headers' => [
-                        'Authorization' => $this->token,
-                    ],
-                    'timeout' => 5,
-                    'verify' => false
-                ]);
-
-                $response = $client->delete("/api/v1/namespaces/" . $name);
-            } catch (\Exception $e) {
-                continue;
+        try {
+            $environmentAccesses = EnvironmentAccess::where('environment_id',$environment->id)->pluck('id');
+            if (count($environmentAccesses) == 0)
+                abort(404);
+    
+            for ($i=0; $i < $environment->quantity; $i++) { 
+                try {
+                    $name= $environment->name .'-'. $environment->id .'-env-'. $environmentAccesses[$i];
+                    $client = new Client([
+                        'base_uri' => $this->endpoint,
+                        'headers' => [
+                            'Authorization' => $this->token,
+                        ],
+                        'timeout' => 5,
+                        'verify' => false
+                    ]);
+    
+                    $response = $client->delete("/api/v1/namespaces/" . $name);
+                } catch (\Exception $e) {
+                    continue;
+                }
             }
+        } catch (\Exception $e) {
+            $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
+            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
