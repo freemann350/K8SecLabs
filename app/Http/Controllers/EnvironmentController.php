@@ -27,7 +27,7 @@ class EnvironmentController extends Controller
     public function index()
     {
         try {
-            $userId = Auth::user()->id;
+            $userId = Auth::id();
             $environments = Environment::whereHas('userDefinition', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })->get();
@@ -35,14 +35,14 @@ class EnvironmentController extends Controller
             return view('environments.index', compact('environments'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
     public function create()
     {
         try {
-            $userId = Auth::user()->id;
+            $userId = Auth::id();
             $user_definitions = UserDefinition::where('user_id', $userId)->get();
             $definitionCount = $user_definitions->count();
     
@@ -54,7 +54,7 @@ class EnvironmentController extends Controller
             return view('environments.create', compact('user_definitions'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -154,7 +154,7 @@ class EnvironmentController extends Controller
             return redirect()->route('Environments.show',$environment->id)->with('success-msg', "Environment '". $formData['name'] ."' was added with success");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -169,7 +169,7 @@ class EnvironmentController extends Controller
             return view('environments.show', compact('environmentAccesses'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
     
@@ -190,7 +190,7 @@ class EnvironmentController extends Controller
             return redirect()->route('Environments.index')->with('success-msg', 'Environment ended successfully.');
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -338,7 +338,7 @@ class EnvironmentController extends Controller
         try {
             $environmentAccesses = EnvironmentAccess::where('environment_id',$environment->id)->pluck('id');
             if (count($environmentAccesses) == 0)
-                abort(404);
+                return;
     
             for ($i=0; $i < $environment->quantity; $i++) { 
                 try {
@@ -352,14 +352,14 @@ class EnvironmentController extends Controller
                         'verify' => false
                     ]);
     
-                    $response = $client->delete("/api/v1/namespaces/" . $name);
+                    $response = $client->delete("/api/v1/namespaces/$name");
                 } catch (\Exception $e) {
                     continue;
                 }
             }
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('id');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('definition_id')->constrained('definitions')->onDelete('cascade');
+            //$table->unique(['user_id', 'definition_id']);
             $table->softDeletes();
         });
     }

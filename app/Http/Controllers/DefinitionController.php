@@ -18,12 +18,12 @@ class DefinitionController extends Controller
     public function index()
     {
         try {
-            $definitions = Definition::where('user_id', Auth::user()->id)->get();
-            $userDefinitions = UserDefinition::where('user_id', Auth::user()->id)->get();
+            $definitions = Definition::where('user_id', Auth::id())->get();
+            $userDefinitions = UserDefinition::where('user_id', Auth::id())->get();
             return view('definitions.index', compact('definitions','userDefinitions'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -38,7 +38,7 @@ class DefinitionController extends Controller
             return view('definitions.catalog', compact('definitions'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -56,7 +56,7 @@ class DefinitionController extends Controller
             return view('definitions.create', compact('categories', 'users'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -65,25 +65,22 @@ class DefinitionController extends Controller
         try {
             $formData = $request->validated();
 
+            $fileName = $formData['name'] . '.json';
+            $filePath = 'definitions/' . $fileName;
+
             $definition = Definition::create([
                 'name' => $formData['name'],
-                'user_id' => Auth::user()->id,
+                'user_id' => Auth::id(),
                 'category_id' => $formData['category'],
-                'path' => 0,
+                'path' => $filePath,
                 'description' => $formData['description'],
                 'private' => $formData['private'] == 1 ? 1 : 0,
                 'tags' => $formData['tags'],
             ]);
     
-            //SAVES THE FILE ON THE LOCAL STORAGE (storage/app/definitions/)
             $file = $formData['definition'];
-            $fileName = $formData['name'] . '.json';
-            $filePath = 'definitions/' . $fileName;
             Storage::put($filePath, file_get_contents($file));
-    
-            $definition->path = $filePath;
-            $definition->save();
-    
+            
             //ASSOCIATES THE NEWLY CREATED DEFINITION TO THE USER SO THEY CAN USE IT
             UserDefinition::create([
                 'user_id' => Auth::id(),
@@ -93,7 +90,7 @@ class DefinitionController extends Controller
             return redirect()->route('Definitions.index')->with('success-msg', 'Definition created successfully.');
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -112,7 +109,7 @@ class DefinitionController extends Controller
             return view('definitions.show', compact('definition', 'json', 'tags', 'variables'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -131,7 +128,7 @@ class DefinitionController extends Controller
             return view('definitions.edit', compact('definition', 'categories', 'users'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -143,7 +140,6 @@ class DefinitionController extends Controller
             $definition = Definition::findOrfail($id);
             $fileName = $formData['name'] . '.json';
             $filePath = 'definitions/' . $fileName;
-            Storage::move($definition->path, $filePath);
 
             $definition->update([
                 'name' => $formData['name'],
@@ -154,10 +150,12 @@ class DefinitionController extends Controller
                 'tags' => $formData['tags'],
             ]);
 
+            Storage::move($definition->path, $filePath);
+
             return redirect()->route('Definitions.index')->with('success-msg', 'Definition updated successfully.');
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -171,23 +169,24 @@ class DefinitionController extends Controller
             $file = $formData['definition'];
             $fileName = $definition->name . '.json';
             $filePath = 'definitions/' . $fileName;
-            Storage::put($filePath, file_get_contents($file));
             
             $definition->update([
                 'path' => $filePath
             ]);
     
+            Storage::put($filePath, file_get_contents($file));
+    
             return redirect()->route('Definitions.index')->with('success-msg', 'Definition updated successfully.');
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
     public function addDefinition($id) 
     {
         try {
-            $user = Auth::user()->id;
+            $user = Auth::id();
             $definition = Definition::findOrFail($id);
             
             if ($definition->user_id != Auth::id() && $definition->private == 1) {
@@ -202,14 +201,14 @@ class DefinitionController extends Controller
             }
     
             UserDefinition::create([
-                'user_id' => Auth::user()->id,
+                'user_id' => Auth::id(),
                 'definition_id' => $id,
             ]);
     
             return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name.'" added successfully.');
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -217,14 +216,14 @@ class DefinitionController extends Controller
     {
         try {
             $userDefinition = UserDefinition::findOrFail($id);
-            $definition = Definition::findOrFail($userDefinition->definition_id);
+            $definition = Definition::findOrFail($userDefinition->definition_id,'name');
             
             $userDefinition->delete();
     
             return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name .'" was removed from your definitions successfully.');
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -236,13 +235,14 @@ class DefinitionController extends Controller
             if (Storage::exists($definition->path)) {
                 Storage::delete($definition->path);
             }
-    
+            
+            UserDefinition::where('definition_id', $id)->delete();
             $definition->delete();
-    
+
             return redirect()->route('Definitions.index')->with('success-msg', 'Definition deleted successfully.');
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -254,7 +254,7 @@ class DefinitionController extends Controller
             return response()->download($filePath);
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 

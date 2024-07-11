@@ -16,7 +16,7 @@ class CategoryController extends Controller
             return view('categories.index', ['categories' => $categories]);
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -34,7 +34,7 @@ class CategoryController extends Controller
             return redirect()->route('Categories.index')->with('success', 'Category created successfully.');
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -45,7 +45,7 @@ class CategoryController extends Controller
             return view('categories.edit', compact('category'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -60,7 +60,7 @@ class CategoryController extends Controller
             return redirect()->route('Categories.index')->with('success', 'Category updated successfully.');
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -73,7 +73,7 @@ class CategoryController extends Controller
             return redirect()->route('Categories.index')->with('success-msg', "$name was deleted successfully");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 

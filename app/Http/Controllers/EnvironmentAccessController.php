@@ -23,13 +23,13 @@ class EnvironmentAccessController extends Controller
     public function index()
     {
         try {
-            $userId = Auth::user()->id;
+            $userId = Auth::id();
             $environmentAccesses = EnvironmentAccess::where('user_id', $userId)->get();
     
             return view('environmentAccesses.index', compact('environmentAccesses'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
     
@@ -115,7 +115,7 @@ class EnvironmentAccessController extends Controller
             return view('environmentAccesses.show', compact('environmentAccess','status'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -123,18 +123,18 @@ class EnvironmentAccessController extends Controller
     {
         try {
             $environment = Environment::findOrFail($id);
-            $environmentAccesses = EnvironmentAccess::where('environment_id',$environment->id)->get();
+            $environmentAccesses = EnvironmentAccess::where('environment_id',$environment->id)->get('id');
             
             foreach ($environmentAccesses as $environmentAccess) {
-                if ($environmentAccess->user_id == Auth::user()->id) {
+                if ($environmentAccess->user_id == Auth::id()) {
                     return redirect()->route('EnvironmentAccesses.show',$environmentAccess->id);
                 }
             }
     
-            return view('environmentAccesses.code', ['id' => $id]);
+            return view('environmentAccesses.code', compact('id'));
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -152,13 +152,13 @@ class EnvironmentAccessController extends Controller
                     foreach ($environmentAccesses as $environmentAccess) {
                         if ($environmentAccess->user_id == null) {
                             $environmentAccess->update([
-                                'user_id' => Auth::user()->id
+                                'user_id' => Auth::id()
                             ]);
     
                             return redirect()->route('EnvironmentAccesses.show',$environmentAccess->id);
                         }
     
-                        if ($environmentAccess->user_id == Auth::user()->id)
+                        if ($environmentAccess->user_id == Auth::id())
                             return redirect()->route('EnvironmentAccesses.show',$environmentAccess->id);
                     }
                 } else {
@@ -175,7 +175,7 @@ class EnvironmentAccessController extends Controller
             }
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 

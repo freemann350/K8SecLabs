@@ -18,7 +18,7 @@ class UserController extends Controller
             return view('users.index', ['users' =>$users]);
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -42,7 +42,7 @@ class UserController extends Controller
             return redirect()->route('Users.index')->with('success-msg', "An User was added with success");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -53,7 +53,7 @@ class UserController extends Controller
             return view('users.edit', ['user' => $user]);
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -69,7 +69,7 @@ class UserController extends Controller
             return redirect()->route('Users.index')->withInput()->with('success-msg', "$name was updated with success");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -81,7 +81,7 @@ class UserController extends Controller
             return view('users.editMe', ['user' => $user]);
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -95,7 +95,7 @@ class UserController extends Controller
             return redirect()->back()->withInput()->with('success-msg', "Your information was updated with success");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -110,7 +110,7 @@ class UserController extends Controller
             return redirect()->back()->withInput()->with('success-msg', "Your password was updated with success");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
@@ -125,7 +125,7 @@ class UserController extends Controller
             return redirect()->route('Users.index')->with('success-msg', "$name was deleted with success");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
-            return redirect()->redirect()->back()->withInput()->with('error_msg', $errormsg);
+            return redirect()->back()->withInput()->with('error_msg', $errormsg);
         }
     }
 
