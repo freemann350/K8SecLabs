@@ -9,7 +9,7 @@ use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    public function index(): View
+    public function index()
     {
         try {
             $categories = Category::all();
@@ -30,8 +30,9 @@ class CategoryController extends Controller
         try {
             $formData = $request->validated();
 
-            Category::create($request->all());
-            return redirect()->route('Categories.index')->with('success', 'Category created successfully.');
+            $category = Category::create($request->all());
+
+            return redirect()->route('Categories.index')->with('success-msg', "Category '$category->name' created successfully.");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
             return redirect()->back()->withInput()->with('error_msg', $errormsg);
@@ -57,7 +58,7 @@ class CategoryController extends Controller
             $category = Category::findOrFail($id);
             $category->update($request->all());
     
-            return redirect()->route('Categories.index')->with('success', 'Category updated successfully.');
+            return redirect()->route('Categories.index')->with('success-msg', "Category '$category->name' updated successfully.");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
             return redirect()->back()->withInput()->with('error_msg', $errormsg);
@@ -68,9 +69,9 @@ class CategoryController extends Controller
     {
         try {
             $category = Category::findOrFail($id);
-            $name = $category->name;
+
             $category->delete();
-            return redirect()->route('Categories.index')->with('success-msg', "$name was deleted successfully");
+            return redirect()->route('Categories.index')->with('success-msg', "Category '$category->name' was deleted successfully");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
             return redirect()->back()->withInput()->with('error_msg', $errormsg);

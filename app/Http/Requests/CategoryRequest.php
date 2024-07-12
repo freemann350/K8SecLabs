@@ -24,7 +24,7 @@ class CategoryRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                'unique:categories',
+                //'unique:categories,name',
                 'max:50'
             ],
             'training_type' => [

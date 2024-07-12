@@ -176,7 +176,7 @@ class DefinitionController extends Controller
     
             Storage::put($filePath, file_get_contents($file));
     
-            return redirect()->route('Definitions.index')->with('success-msg', 'Definition updated successfully.');
+            return redirect()->route('Definitions.index')->with('success-msg', "Definition '$definition->name' updated successfully.");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
             return redirect()->back()->withInput()->with('error_msg', $errormsg);
@@ -190,13 +190,13 @@ class DefinitionController extends Controller
             $definition = Definition::findOrFail($id);
             
             if ($definition->user_id != Auth::id() && $definition->private == 1) {
-                $errormsg = $this->createError('403','Forbidden','The definition "'.$definition->name.'" is private');
+                $errormsg = $this->createError('403','Forbidden',"The definition '$definition->name' is private");
                 return redirect()->back()->withInput()->with('error_msg', $errormsg);
             }
     
             $exists = UserDefinition::where("user_id",$user)->where("definition_id",$definition->id)->exists();
             if ($exists) {
-                $errormsg = $this->createError('405','Method Not Allowed','You already have the Definition "'.$definition->name.'"');
+                $errormsg = $this->createError('405','Method Not Allowed',"You already have the Definition '$definition->name'");
                 return redirect()->back()->withInput()->with('error_msg', $errormsg);
             }
     
@@ -205,7 +205,7 @@ class DefinitionController extends Controller
                 'definition_id' => $id,
             ]);
     
-            return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name.'" added successfully.');
+            return redirect()->route('Definitions.index')->with('success-msg', "Definition '$definition->name' added successfully.");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
             return redirect()->back()->withInput()->with('error_msg', $errormsg);
@@ -220,7 +220,7 @@ class DefinitionController extends Controller
             
             $userDefinition->delete();
     
-            return redirect()->route('Definitions.index')->with('success-msg', 'Definition "'.$definition->name .'" was removed from your definitions successfully.');
+            return redirect()->route('Definitions.index')->with('success-msg', "Definition '$definition->name' was removed from your definitions successfully.");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
             return redirect()->back()->withInput()->with('error_msg', $errormsg);
@@ -231,6 +231,7 @@ class DefinitionController extends Controller
     {
         try {
             $definition = Definition::findOrFail($id);
+            $name = $definition->name;
         
             if (Storage::exists($definition->path)) {
                 Storage::delete($definition->path);
@@ -239,7 +240,7 @@ class DefinitionController extends Controller
             UserDefinition::where('definition_id', $id)->delete();
             $definition->delete();
 
-            return redirect()->route('Definitions.index')->with('success-msg', 'Definition deleted successfully.');
+            return redirect()->route('Definitions.index')->with('success-msg', "Definition '$name' deleted successfully.");
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
             return redirect()->back()->withInput()->with('error_msg', $errormsg);

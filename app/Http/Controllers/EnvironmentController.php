@@ -184,10 +184,12 @@ class EnvironmentController extends Controller
                 ]);
         
                 $this->deleteNamespace($environment);
+                return redirect()->route('Environments.index')->with('success-msg', "Environment '$environment->name' ended successfully.");
             } else {
+                $name = $environment->name;
                 $environment->delete();
+                return redirect()->route('Environments.index')->with('success-msg', "Environment '$name' was deleted successfully.");
             }
-            return redirect()->route('Environments.index')->with('success-msg', 'Environment ended successfully.');
         } catch (\Exception $e) {
             $errormsg = $this->createError('500','Internal Server Error',$e->getMessage());
             return redirect()->back()->withInput()->with('error_msg', $errormsg);

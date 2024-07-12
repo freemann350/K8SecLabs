@@ -21,7 +21,7 @@ class UpdateDefinitionInfoRequest extends FormRequest
      */
     public function rules(): array
     {
-        $definitionId = $this->route('Definition'); // Assumes the route parameter is 'definition'
+        $definitionId = $this->route('Definition');
         return [
             'name' => [
                 'required', 
